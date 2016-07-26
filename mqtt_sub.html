@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/angular.min.js"></script>
+  <script src="lib/mqttws31.js"></script>
+  <script src="lib/Math.uuid.js"></script>
+</head>
+<body ng-controller="myCtrlr">
+  <div ng-init="t_host='localhost';t_port=9001"></div>
+
+  <h1>Mqtt-subscriber</h1>
+  Mqtt Host/Port: <br>
+  <input type="text" ng-model="t_host"><input type="text" ng-model="t_port"> <br> <br>
+  Topic: <br>
+  <input type="text" ng-show="flag_connStat" ng-model="t_topic"> <br> <br>
+  <input type="button" value="subscribe" ng-show="flag_connStat" ng-click="f_sub()">
+
+  <input type="button" value="unsubscribe" ng-show="flag_connStat" >
+  <input type="button" value="connect" ng-show="flag_connBtn" ng-click="f_connBtn()">
+
+
+
+  <script>
+  var app = angular.module('myApp',[]);
+  app.controller('myCtrlr',function($scope){
+    $scope.flag_connBtn = true;
+    $scope.flag_connStat = false;
+
+    var mqtt_connection;
+    var mqtt_host,mqtt_port;
+    $scope.t_topic="chat1";
+    var topic;
+
+    topic = $scope.t_topic;
+
+    $scope.f_connBtn = function(){
+      mqtt_host = $scope.t_host;
+      mqtt_port = $scope.t_port;
+
+
+
+      var mqtt_connection = new Paho.MQTT.Client(mqtt_host, Number(mqtt_port), Math.uuid(8, 16));
+
+      mqtt_connection.connect({  onSuccess: f_connect($scope)   });
+
+      mqtt_connection.onMessageArrived = f_messageHandler;
+
+      mqtt_connection.onConnectionLost = f_connectLost;
+
+
+      function f_connect(scope){
+        //alert("connect success");
+        $scope.flag_connBtn = false;
+        $scope.flag_connStat = true;
+      }
+
+      function f_messageHandler(message){
+        alert("message arrived");
+        //alert(JSON.stringify(message.payloadString));
+      }
+      function f_connectLost(errObj){
+        alert("connect failed");
+        //alert(errObj.errCode+errObj.errMessage);
+      }
+    }
+
+    $scope.f_sub = function(){
+      //alert(topic);
+      mqtt_connection.subscribe(topic);
+
+    }
+
+
+
+  });
+  </script>
+</body>
+</html>

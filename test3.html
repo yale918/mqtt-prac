@@ -1,0 +1,35 @@
+<script src="lib/mqttws31.js"></script>
+<body>
+  <script>
+    main();
+    var client;
+    function main(){
+      var port = 9001;
+      var host = 'localhost';
+      client = new Paho.MQTT.Client(host,port,'testid');
+
+      client.connect({   onSuccess:func1   });
+      client.onConnectionLost = func2;
+      client.onMessageArrived = func3;
+
+    }
+
+    function func1(){
+      alert("connect success");
+      client.subscribe("test");
+      var message = new Paho.MQTT.Message("Hello World");
+      message.destinationName = "test";
+      client.send(message);
+    }
+    function func2(res){
+      alert("connect failed");
+    }
+    function func3(message){
+      alert(message.payloadString);
+    }
+
+
+
+  </script>
+
+</body>

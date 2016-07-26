@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+
+  <script src="lib/angular.min.js"></script>
+  <script>/*
+
+  </script>
+</head>
+<body ng-controller="myFunc">
+
+姓名：<input type="text" ng-model="t._name" /><br>
+學校：<input type="text" ng-model="t._school" /><br>
+年級：<input type="text" ng-model="t._grade" /><br>
+
+<input type="button" value="add" ng-click="addItem()" />
+
+  <!--<li ng-repeat="items in defaultList">{{items}}</li>-->
+  <!--<p ng-repeat="items in addList track by $index">{{items}}</p>-->
+<hr>
+姓名：{{t._name}}<br>
+學校：{{t._school}}<br>
+年級：{{t._grade}}<br>
+<hr>
+  <table ng-show="flag">
+    <tr>
+      <th>姓名</th>
+      <th>學校</th>
+      <th>年級</th>
+    </tr>
+    <tr ng-repeat="stu in students track by $index">
+      <td>{{stu._name}}</td>
+      <td>{{stu._school}}</td>
+      <td>{{stu._grade}}</td>
+
+    </tr>
+
+  </table>
+
+
+  <script>
+    var app = angular.module('myApp',[]);
+    app.controller('myFunc',function($scope){
+
+      $scope.t = {};
+      $scope.t._name="";
+      $scope.t._school="";
+      $scope.t._grade="";
+      $scope.flag = false;
+      $scope.students = [];
+      $scope.addItem = function (){
+        if($scope.t._name){
+          $scope.students.push({
+            _name:   $scope.t._name,
+            _school: $scope.t._school,
+            _grade:  $scope.t._grade
+          });
+          //alert("joined");
+          $scope.t._name="";
+          $scope.t._school="";
+          $scope.t._grade="";
+          $scope.flag = true;
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
