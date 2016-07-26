@@ -7,8 +7,8 @@
   <script src="lib/Math.uuid.js"></script>
 </head>
 <body ng-controller="myCtrlr">
-  <div ng-init="t_host='localhost';t_port=9001"></div>
-  <h1>Mqtt-publisher</h1>
+  <div ng-init="t_host='yale918.tk';t_port=9001"></div>
+  <h1>Mqtt-publisher(echo)</h1>
   Mqtt Host/Port <br>
   <input type="text" ng-model="t_host" ><input type="text" ng-model="t_port" > <br>
   {{t_host}} {{t_port}} <br> <br>
@@ -21,7 +21,7 @@
   <input type="button" value="autoTest" ng-show="flag_connStat" ng-click="btn_autoTest()">
 
 
-ad
+
   <script>
     var app = angular.module('myApp',[]);
     app.controller('myCtrlr',function($scope){

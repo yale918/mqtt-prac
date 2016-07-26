@@ -1,28 +1,29 @@
 <html ng-app='myApp'>
 
 <head>
-	<style>
-		#mainFrame {
-			width: 510px;
-			height: 320px;
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			margin-top: -150px;
-			margin-left: -250px;
-		}
-	</style>
-	<script src="lib/angular.min.js"></script>
-  <script src="lib/mqttws31.js"></script>
-  <script src="lib/Math.uuid.js"></script>
+<meta charset="utf-8">
+<style>
+#mainFrame {
+	width: 510px;
+height: 320px;
+position: absolute;
+top: 50%;
+left: 50%;
+      margin-top: -150px;
+      margin-left: -250px;
+}
+</style>
+<script src="lib/angular.min.js"></script>
+<script src="lib/mqttws31.js"></script>
+<script src="lib/Math.uuid.js"></script>
 </head>
 <!-- ########################################################## -->
 
 <body ng-controller='myCtrlr'>
 
 <script>
-	var app = angular.module('myApp',[]);
-	app.controller('myCtrlr',function($scope){
+var app = angular.module('myApp',[]);
+app.controller('myCtrlr',function($scope){
 		var host, port, client;
 		var m_message;
 		var currentTopic = 'Lobby';
@@ -30,19 +31,19 @@
 		var tag1,tag2,tag3,tag4
 
 		$scope.connStat=false;
-/*
-		$scope.reset = function(){
-			$scope.showMessage = '';
-		}
-*/
+		/*
+		   $scope.reset = function(){
+		   $scope.showMessage = '';
+		   }
+		 */
 		$scope.connect = function (){
-			host = $scope.t_host;
-			port = $scope.t_port;
-			client = new Paho.MQTT.Client(host, Number(port),Math.uuid(8,16));
+		host = $scope.t_host;
+		port = $scope.t_port;
+		client = new Paho.MQTT.Client(host, Number(port),Math.uuid(8,16));
 
-			client.onConnectionLost = f_connLost;
-			client.connect({onSuccess: f_connConnect});
-			client.onMessageArrived = f_connMessage;
+		client.onConnectionLost = f_connLost;
+		client.connect({onSuccess: f_connConnect});
+		client.onMessageArrived = f_connMessage;
 		}
 
 		function f_connLost(resObj){
@@ -53,145 +54,145 @@
 			console.log("connect successful");
 
 
-			//alert("true");
+			alert("連線成功");
 			client.subscribe(currentTopic);   //default sub: Lobby
 			$scope.$apply(function(){
-				$scope.channelName = currentTopic;
-				$scope.connStat=true;
+					$scope.channelName = currentTopic;
+					$scope.connStat=true;
+					});
+		}
+		/*
+		   $scope.$watch('showMessage',function(){
+		   alert('helloooooo');
+//$scope.showMessage = _message.payloadString+"\n";
+});
+		 */
+function f_connMessage(_message){
+	console.log("receive:" + _message.payloadString);
+
+	$scope.$apply(function(){
+			$scope.showMessage += _message.payloadString+"\n";
 			});
-		}
-/*
-		$scope.$watch('showMessage',function(){
-			alert('helloooooo');
-			//$scope.showMessage = _message.payloadString+"\n";
-		});
-*/
-		function f_connMessage(_message){
-			console.log("receive:" + _message.payloadString);
 
-			$scope.$apply(function(){
-				$scope.showMessage += _message.payloadString+"\n";
-			});
+}
 
-		}
-
-		$scope.b_ch1 = function(){
-			console.log("hello world");
-			client.unsubscribe(currentTopic);
-			currentTopic = 'Google';
-			client.subscribe(currentTopic);
-			console.log($scope.channelName);
-			$scope.channelName = currentTopic;
-			$scope.showMessage = "";
-		}
-		$scope.b_ch2 = function(){
-			//console.log("hello world");
-			client.unsubscribe(currentTopic);
-			currentTopic = 'Facebook';
-			client.subscribe(currentTopic);
-			console.log($scope.channelName);
-			$scope.channelName = currentTopic;
-			$scope.showMessage = "";
-		}
-		$scope.b_ch3 = function(){
-			//console.log("hello world");
-			client.unsubscribe(currentTopic);
-			currentTopic = 'Amazon';
-			client.subscribe(currentTopic);
-			console.log($scope.channelName);
-			$scope.channelName = currentTopic;
-			$scope.showMessage = "";
-		}
-		$scope.b_ch4 = function(){
-			//console.log("hello world");
-			client.unsubscribe(currentTopic);
-			currentTopic = 'Apple';
-			client.subscribe(currentTopic);
-			console.log($scope.channelName);
-			$scope.channelName = currentTopic;
-			$scope.showMessage = "";
-		}
+$scope.b_ch1 = function(){
+	console.log("hello world");
+	client.unsubscribe(currentTopic);
+	currentTopic = 'Google';
+	client.subscribe(currentTopic);
+	console.log($scope.channelName);
+	$scope.channelName = currentTopic;
+	$scope.showMessage = "";
+}
+$scope.b_ch2 = function(){
+	//console.log("hello world");
+	client.unsubscribe(currentTopic);
+	currentTopic = 'Facebook';
+	client.subscribe(currentTopic);
+	console.log($scope.channelName);
+	$scope.channelName = currentTopic;
+	$scope.showMessage = "";
+}
+$scope.b_ch3 = function(){
+	//console.log("hello world");
+	client.unsubscribe(currentTopic);
+	currentTopic = 'Amazon';
+	client.subscribe(currentTopic);
+	console.log($scope.channelName);
+	$scope.channelName = currentTopic;
+	$scope.showMessage = "";
+}
+$scope.b_ch4 = function(){
+	//console.log("hello world");
+	client.unsubscribe(currentTopic);
+	currentTopic = 'Apple';
+	client.subscribe(currentTopic);
+	console.log($scope.channelName);
+	$scope.channelName = currentTopic;
+	$scope.showMessage = "";
+}
 
 
-		$scope.getInput = function(){
-			//console.log("get input= "+this.inputStr);
-			f_send(this.inputStr,currentTopic);
-			this.inputStr="";
-		}
+$scope.getInput = function(){
+	//console.log("get input= "+this.inputStr);
+	f_send(this.inputStr,currentTopic);
+	this.inputStr="";
+}
 
-		function f_send(_message, _topic){
-			//console.log("in f_send, message= "+_message);
-			m_message = new Paho.MQTT.Message(_message);
-			m_message.destinationName = _topic;
-			try{
-				client.send(m_message);
-				//alert("send:"+m_message);
-			}
-			catch(err){
-				alert(err.stack);
-			}
+function f_send(_message, _topic){
+	//console.log("in f_send, message= "+_message);
+	m_message = new Paho.MQTT.Message(_message);
+	m_message.destinationName = _topic;
+	try{
+		client.send(m_message);
+		//alert("send:"+m_message);
+	}
+	catch(err){
+		alert(err.stack);
+	}
 
-		}
-	});
+}
+});
 
-	//document.getElementById(chatArea).value +=
+//document.getElementById(chatArea).value +=
 
 </script>
 <!-- ########################################################## -->
-	<div ng-init="t_host='localhost';t_port='9001';showMessage=''">
-	<div style="text-align:center">
-  	Mqtt Host . . . Port <br>
-  	<input type="text" ng-model="t_host" ><input type="text" ng-model="t_port" >
-		<input type="button" value="connect" ng-click="connect()" ><br>
-	</div>
+<div ng-init="t_host='yale918.tk';t_port='9001';showMessage=''">
+<div style="text-align:center">
+Mqtt Host . . . Port <br>
+<input type="text" ng-model="t_host" ><input type="text" ng-model="t_port" >
+<input type="button" value="connect" ng-click="connect()" ><br>
+</div>
 
 
-	<div id="mainFrame">
-		<div style="width:510px;height:50px;">
+<div id="mainFrame">
+<div style="width:510px;height:50px;">
 
-			<div style="background-color:linen;float:left;width:400px;height:50px;border:1px solid #666666">
-				<div id="Chnnel1" ng-click="b_ch1()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
-					Google
-					<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
-				</div>
-				<div id="Chnnel2" ng-click="b_ch2()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
-					Facebook
-					<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
-				</div>
-				<div id="Channel3" ng-click="b_ch3()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
-					Amazon
-				</div>
-				<div id="Channel4" ng-click="b_ch4()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
-					Apple
-				</div>
-			</div>
+<div style="background-color:linen;float:left;width:400px;height:50px;border:1px solid #666666">
+<div id="Chnnel1" ng-click="b_ch1()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+Google
+<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
+</div>
+<div id="Chnnel2" ng-click="b_ch2()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+Facebook
+<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
+</div>
+<div id="Channel3" ng-click="b_ch3()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+Amazon
+</div>
+<div id="Channel4" ng-click="b_ch4()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+Apple
+</div>
+</div>
 
-			<div style="background-color:linen;marginleft:10px;float:right;width:100px;height:50px;">
-				<textarea ng-model="channelName" id="room" readonly="readonly" style="font-size:200%;line-height:40px;text-align:center;border:1px solid #666666;resize: none;font-size:10px;background-color:linen;width:100%;height:100%">
-				</textarea>
-			</div>
-		</div>
+<div style="background-color:linen;marginleft:10px;float:right;width:100px;height:50px;">
+<textarea ng-model="channelName" id="room" readonly="readonly" style="font-size:200%;line-height:40px;text-align:center;border:1px solid #666666;resize: none;font-size:10px;background-color:linen;width:100%;height:100%">
+</textarea>
+</div>
+</div>
 
-		<!-- showMessage  -->
-		<div style="margin-top:10px;width:510px;height:200px;">
-			<div style="background-color:linen;float:left;width:398px;height:200px;">
-				<textarea ng-model="showMessage"  id="chatArea" style="resize: none;background-color:linen;width:100%;height:100%;border:1px solid #666666"></textarea>
-			</div>
-		<div style="background-color:linen;margin-left:10px;float:right;width:98px;height:200px;border:1px solid #666666"></div>
+<!-- showMessage  -->
+<div style="margin-top:10px;width:510px;height:200px;">
+<div style="background-color:linen;float:left;width:398px;height:200px;">
+<textarea ng-model="showMessage"  id="chatArea" style="resize: none;background-color:linen;width:100%;height:100%;border:1px solid #666666"></textarea>
+</div>
+<div style="background-color:linen;margin-left:10px;float:right;width:98px;height:200px;border:1px solid #666666"></div>
 
-		<!-- getINput  -->
+<!-- getINput  -->
 
-		<form  ng-submit="getInput()">
-			<div >
-			<div  style="margin-top:10px;background-color:linen;width:510px;height:30px;">
-				<input ng-show="connStat" ng-model="inputStr" type="text" style="background-color:linen;width:430px;width:100%;height:100%;border:1px solid #666666 "></input>
-			</div>
-			</div>
-		</form>
+<form  ng-submit="getInput()">
+<div >
+<div  style="margin-top:10px;background-color:linen;width:510px;height:30px;">
+<input ng-show="connStat" ng-model="inputStr" type="text" style="background-color:linen;width:430px;width:100%;height:100%;border:1px solid #666666 "></input>
+</div>
+</div>
+</form>
 
-	<a id="button"></a>
+<a id="button"></a>
 
-	</br>	</br></br>
+</br>	</br></br>
 
 </body>
 </html>
