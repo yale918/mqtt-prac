@@ -1,0 +1,282 @@
+<html ng-app='myApp'>
+
+<head>
+	<meta charset="utf-8">
+	<style>
+		#mainFrame {
+			width: 510px;
+			height: 320px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -150px;
+			margin-left: -250px;
+		}
+	</style>
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/mqttws31.js"></script>
+	<script src="lib/Math.uuid.js"></script>
+</head>
+<!-- ########################################################## -->
+
+<body ng-controller='myCtrlr'>
+
+	<!-- ########################################################## -->
+	<div ng-init="t_host='localhost';t_port='9001';showMessage='';t_name='yale918'">
+
+
+		<div style="text-align:center">
+			Host . . . . . . . . Port . . . . . . . . Name
+			<br>
+			<input type="text" ng-model="t_host" ng-disabled="connStat"></input>
+			<input type="text" ng-model="t_port" ng-disabled="connStat"></input>
+			<input type="text" ng-model="t_name" ng-disabled="connStat"> </input>
+			<input type="button" value="connect" ng-click="connect()" ng-show="!connStat"></input>
+			<input type="button" value="disconnect" ng-click="disConnect()" ng-show="connStat"></input>
+
+			<br>
+		</div>
+<ul>
+	<li ng-repeat="topic in topicList">{{topic}}</li>
+</ul>
+
+		<div id="mainFrame">
+			<div style="width:510px;height:50px;">
+
+				<div style="background-color:linen;float:left;width:400px;height:50px;border:1px solid #666666">
+					<div id="Chnnel1" ng-click="b_ch1()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Google
+						<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
+					</div>
+					<div id="Chnnel2" ng-click="b_ch2()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Facebook
+						<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
+					</div>
+					<div id="Channel3" ng-click="b_ch3()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Amazon
+					</div>
+					<div id="Channel4" ng-click="b_ch4()" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Apple
+					</div>
+				</div>
+
+				<div style="background-color:linen;marginleft:10px;float:right;width:100px;height:50px;">
+					<textarea ng-model="channelName" id="room" readonly="readonly" style="line-height:40px;text-align:center;border:1px solid #666666;resize: none;font-size:2px;background-color:linen;width:100%;height:100%">
+					</textarea>
+				</div>
+			</div>
+
+			<!-- showMessage  -->
+			<div style="margin-top:10px;width:510px;height:200px;">
+				<div style="background-color:linen;float:left;width:398px;height:200px;">
+					<textarea ng-model="showMessage" id="chatArea" readonly="readonly" style="resize: none;background-color:linen;width:100%;height:100%;border:1px solid #666666"></textarea>
+				</div>
+<div  style="background-color:linen;margin-left:10px;float:right;width:98px;height:200px;border:1px solid #666666">
+
+	<table>
+		<tr ng-repeat="users in online_users track by $index">
+		<td ><a href=""  ng-click="privateChannel(users)">{{users}}</td>
+		</tr>
+	</table>
+</div>
+
+				<!-- getINput  -->
+				<form ng-submit="getInput()">
+					<div>
+						<div style="margin-top:10px;background-color:linen;width:510px;height:30px;">
+							<input ng-show="connStat" ng-model="inputStr" type="text" style="background-color:linen;width:430px;width:100%;height:100%;border:1px solid #666666 "></input>
+						</div>
+					</div>
+				</form>
+			</div>
+				<a id="button"></a>
+
+				</br>
+				</br>
+				</br>
+
+
+
+				<script>
+					var app = angular.module('myApp', []);
+					app.controller('myCtrlr', function($scope) {
+						var host, port, client;
+						var m_message;
+						var currentTopic  = 'chat/user/+/presence';
+						var publicTopic = 'chat/user/_public_/presence/+'
+						var privateTopic;
+						var targetChannel;
+						var __message;
+						var tag1, tag2, tag3, tag4;
+						$scope.topicList = [];
+						$scope.online_users = ['_public_'];
+						$scope.connStat = false;
+
+						$scope.connect = function() {
+							host = $scope.t_host;
+							port = $scope.t_port;
+
+							client = new Paho.MQTT.Client(host, Number(port), Math.uuid(8, 16));
+							client.onConnectionLost = f_connLost;
+							client.connect({
+								onSuccess: f_connConnect
+							});
+							client.onMessageArrived = f_connMessage;
+						}
+						$scope.disConnect = function(){
+							f_send('offline','chat/user/'+$scope.t_name+'/presence');
+							client.disconnect();
+							$scope.connStat = false;
+
+							$scope.topicList = [];
+							$scope.online_users = [];
+							$scope.showMessage = "";
+						}
+
+
+
+						function f_connLost(resObj) {
+							console.log(resObj);
+						}
+						function f_connConnect() {
+							console.log("connect successful");
+
+//訂閱廣播
+targetChannel = 'chat/user/'+$scope.t_name+'/presence';
+client.subscribe(currentTopic); //default sub: Lobby
+$scope.topicList.push(currentTopic);
+//訂閱私頻
+privateTopic  = 'chat/user/'+$scope.t_name+'/presence/+';
+client.subscribe(privateTopic);
+$scope.topicList.push(privateTopic);
+//訂閱全頻點擊
+client.subscribe(publicTopic);
+$scope.topicList.push(publicTopic);
+
+f_send('online',targetChannel);
+
+							$scope.$apply(function() {
+								$scope.channelName = currentTopic;
+								$scope.connStat = true;
+							});
+						}
+						function f_connMessage(_message) {
+
+if(_message.payloadString=='online'){
+	console.log('online');
+	console.log('_message.destinationName= '+_message.destinationName);
+	addToList(_message.destinationName);
+}
+else if(_message.payloadString=='offline'){
+	console.log('offline');
+	deleteFromList(_message.destinationName);
+}
+
+else{
+$scope.showMessage += _message.payloadString+ "\n";
+}
+$scope.$apply();
+console.log("receive:" + _message.payloadString);
+
+function deleteFromList(topic){
+	var regex = "chat/user/(.+)/presence";
+	var found = topic.match(regex);
+	if(found){
+		//alert('yes');
+		var user_id = found[1];
+		var index = $scope.online_users.indexOf(user_id);
+		$scope.online_users.splice(index,1);
+	}
+}
+
+
+
+
+
+function addToList(topic){
+	//alert("topic="+topic);
+	var regex = "chat/user/(.+)/presence";
+	var found = topic.match(regex);
+	//alert("found[1]= "+found[1]);
+	if(found){
+		var user_id = found[1];
+		$scope.online_users.push(user_id);
+	}
+}
+
+						}
+
+$scope.privateChannel = function(user_to_chat){
+	//alert('this.t_name= '+user_to_chat);
+	targetChannel = 'chat/user/' + user_to_chat+'/presence/'+$scope.t_name;
+	$scope.channelName = targetChannel;
+	//$scope.targetChannel = targetChannel;
+}
+
+						$scope.b_ch1 = function() {
+							console.log("hello world");
+							client.unsubscribe(currentTopic);
+							currentTopic = 'Google';
+							client.subscribe(currentTopic);
+							console.log($scope.channelName);
+							$scope.channelName = currentTopic;
+							$scope.showMessage = "";
+						}
+						$scope.b_ch2 = function() {
+							//console.log("hello world");
+							client.unsubscribe(currentTopic);
+							currentTopic = 'Facebook';
+							client.subscribe(currentTopic);
+							console.log($scope.channelName);
+							$scope.channelName = currentTopic;
+							$scope.showMessage = "";
+						}
+						$scope.b_ch3 = function() {
+							//console.log("hello world");
+							client.unsubscribe(currentTopic);
+							currentTopic = 'Amazon';
+							client.subscribe(currentTopic);
+							console.log($scope.channelName);
+							$scope.channelName = currentTopic;
+							$scope.showMessage = "";
+						}
+						$scope.b_ch4 = function() {
+							//console.log("hello world");
+							client.unsubscribe(currentTopic);
+							currentTopic = 'Apple';
+							client.subscribe(currentTopic);
+							console.log($scope.channelName);
+							$scope.channelName = currentTopic;
+							$scope.showMessage = "";
+						}
+
+						$scope.getInput = function() {
+							//console.log("get input= "+this.inputStr);
+
+							var j_message = { "name":$scope.t_name, "message":this.inputStr};
+							//f_send(j_message, 'chat/user/'+$scope.t_name+'/presence');
+							//f_send(JSON.stringify(j_message), 'chat/user/'+$scope.t_name+'/presence');
+
+							var sendMessage=$scope.t_name+": "+this.inputStr;
+							f_send(sendMessage, targetChannel);
+							this.inputStr = "";
+						}
+
+						function f_send(_message, _topic) {
+							//console.log("in f_send, message= "+_message);
+							m_message = new Paho.MQTT.Message(_message);
+							m_message.destinationName = _topic;
+							if(_message=='online')
+								m_message.retained = true;
+
+							try {
+								client.send(m_message);
+							} catch (err) {
+								alert(err.stack);
+							}
+						}
+});
+				</script>
+</body>
+
+</html>

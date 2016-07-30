@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/mqttws31.js"></script>
+  <script src="lib/angular.min.js"></script>
+  <script src="lib/Math.uuid.js"></script>
+  <script>
+
+  </script>
+</head>
+<body ng-controller="myFunc">
+<div ng-init="hostname='localhost';port=9001"></div>
+<input type="text" ng-model="hostname">
+<input type="text" ng-model="port"><br>
+<input type="button" value="connect" ng-click="connectBtn()"><br><br>
+
+姓名：<input type="text" ng-model="t._name" /><br>
+學校：<input type="text" ng-model="t._school" /><br>
+年級：<input type="text" ng-model="t._grade" /><br>
+
+<input type="button" value="send" ng-click="sendBtn()" />
+
+
+  <!--<li ng-repeat="items in defaultList">{{items}}</li>-->
+  <!--<p ng-repeat="items in addList track by $index">{{items}}</p>-->
+<hr>
+姓名：{{t._name}}<br>
+學校：{{t._school}}<br>
+年級：{{t._grade}}<br>
+<hr>
+  <table ng-show="flag">
+    <tr>
+      <th>姓名</th>
+      <th>學校</th>
+      <th>年級</th>
+    </tr>
+    <tr ng-repeat="stu in students track by $index">
+      <td>{{stu._name}}</td>
+      <td>{{stu._school}}</td>
+      <td>{{stu._grade}}</td>
+    </tr>
+  </table>
+
+
+  <script>
+    var app = angular.module('myApp',[]);
+    app.controller('myFunc',function($scope){
+
+      var client;
+      var port = 9001;
+      var defChannel = "local";
+      var message;
+      $scope.students = [];
+      varInit($scope);
+      mqttHandler($scope);
+
+      $scope.sendBtn = function (){
+
+        _students={};
+        if($scope.t._name){
+          _students = {
+            _name:   $scope.t._name,
+            _school: $scope.t._school,
+            _grade:  $scope.t._grade
+          };
+        }
+        //console.log("this.t._name="+$scope.t._name);
+        message = new Paho.MQTT.Message(JSON.stringify(_students));
+        message.destinationName = defChannel;
+        client.send(message);
+        $scope.t._name="";
+        $scope.t._school="";
+        $scope.t._grade="";
+      }
+
+      function mqttHandler($scope){
+        $scope.connectBtn = function(){
+          //console.log("hello world");
+          client = new Paho.MQTT.Client(location.hostname, Number(port), Math.uuid(8, 16));
+          client.onConnectionLost = f_connectLost;
+          client.connect({onSuccess:f_connect});
+          client.onMessageArrived = f_connectMessage;
+
+          function f_connectLost(err){
+            console.log(err.errorMessage);
+            console.log("f_connectLost");
+          }
+          function f_connect(){
+            console.log("f_connect");
+            client.subscribe(defChannel);
+          }
+          function f_connectMessage(_message){
+            $scope.flag = true;
+            console.log("_message");
+            console.log(_message.payloadString);
+            $scope.students.push(JSON.parse(_message.payloadString));
+            $scope.$apply();
+          }
+        }
+      }
+
+      function varInit($scope){
+        $scope.t = {};
+        $scope.t._name="";
+        $scope.t._school="";
+        $scope.t._grade="";
+        $scope.flag = false;
+        _students = {};
+      }
+    });
+  </script>
+
+</body>
+</html>
