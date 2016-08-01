@@ -111,11 +111,11 @@
 </div>
 
 
-
+<!--
 <div>
 			<highchart config="chartConfig" > </highchart>
 </div>
-
+-->
 
 </div>
 
@@ -160,7 +160,7 @@
 
 
 				/**********************************************************/
-
+/*
 										$scope.test = function(){
 											chart = $scope.chartConfig.getHighcharts();
 											chart.series[0].setData(
@@ -184,7 +184,7 @@
 												data:[{y:0},{y:0},{y:0},{y:0},{y:0}]
 											}]
 										}
-
+*/
 				/**********************************************************/
 
 										$scope.connect = function() {
@@ -228,7 +228,7 @@
 											ct.google = 0;
 											ct.facebook = 0;
 											ct.apple = 0;
-				$scope.test();
+		//$scope.test();
 										}
 
 										$scope.getInput = function() {
@@ -320,7 +320,7 @@
 											var stb={};
 											stb.room = subStArray[2];
 											stb.name = subStArray[4];
-
+											
 
 											if (_message.payloadString == 'online') {
 				$scope.all_online_users.push(stb.name);
@@ -418,7 +418,7 @@
 											}
 
 											$scope.$apply();
-			$scope.test();
+			//$scope.test();
 										}
 
 										function f_send(_message, _topic) {

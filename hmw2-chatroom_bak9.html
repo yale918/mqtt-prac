@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html ng-app='myApp'>
+
+<head>
+	<meta charset="utf-8">
+	<style>
+		#mainFrame {
+			width: 510px;
+			height: 400px;
+			position: absolute;
+			top: 10%%;
+			left: 50%;
+			margin-top: 0px;
+			margin-left: -250px;
+		}
+	</style>
+	<script type="text/javascript" src="lib/jquery-3.0.0.min.js"></script>
+	<script src="lib/angular.min.js"></script>
+	<script src="lib/mqttws31.js"></script>
+	<script src="lib/Math.uuid.js"></script>
+	<script src="lib/highcharts.js"></script>
+	<script src="lib/highcharts-more.js"></script>
+	<script src="lib/highcharts-ng.min.js"></script>
+
+</head>
+<body ng-controller='myCtrlr'>
+	<div ng-init="t_host='localhost';t_port='9001';showMessage='';t_name='yale918';">
+<!-- ########################################################## -->
+		<div style="text-align:center">
+			Host . . . . . . . . Port . . . . . . . . Name
+			<br>
+			<input type="text" ng-model="t_host" ng-disabled="connStat"></input>
+			<input type="text" ng-model="t_port" ng-disabled="connStat"></input>
+			<input type="text" ng-model="t_name" ng-disabled="connStat"> </input>
+			<input type="button" value="connect" ng-click="connect()" ng-show="!connStat"></input>
+			<input type="button" value="disconnect" ng-click="disConnect()" ng-show="connStat"></input>
+
+			<br>
+		</div>
+		<div style="height:50px;">
+			<ul>
+				<li ng-repeat="topic in topicList">{{topic}}</li>
+			</ul>
+		</div>
+
+<!-- ########################################################## -->
+
+
+		<div id="mainFrame">
+
+
+
+			<div style="width:510px;height:50px;">
+
+				<div style="background-color:linen;float:left;width:400px;height:50px;border:1px solid #666666">
+					<div id="Chnnel1" ng-click="b_ch1('_public_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Public
+						<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
+					</div>
+					<div id="Chnnel2" ng-click="b_ch1('_google_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Google
+						<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
+					</div>
+					<div id="Channel3" ng-click="b_ch1('_facebook_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Facebook
+					</div>
+					<div id="Channel4" ng-click="b_ch1('_apple_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+						Apple
+					</div>
+				</div>
+
+				<div style="background-color:linen;marginleft:10px;float:right;width:100px;height:50px;">
+					<textarea ng-model="channelName" id="room" readonly="readonly" style="line-height:50px;text-align:center;border:1px solid #666666;resize: none;font-size:10px;background-color:linen;width:100%;height:100%">
+					</textarea>
+				</div>
+			</div>
+
+			<!-- showMessage  -->
+			<div style="margin-top:10px;width:510px;height:200px;">
+				<div style="background-color:linen;float:left;width:398px;height:200px;">
+					<textarea ng-model="showMessage" id="chatArea" readonly="readonly" style="resize: none;background-color:linen;width:100%;height:100%;border:1px solid #666666"></textarea>
+				</div>
+				<div style="background-color:linen;margin-left:10px;float:right;width:98px;height:200px;border:1px solid #666666">
+
+					<table>
+						<tr ng-repeat="users in online_users track by $index">
+							<td><a style="text-decoration:none" href="" ng-click="privateChannel(users)">{{users}}</td>
+						</tr>
+					</table>
+				</div>
+</div>
+<div>
+				<!-- getINput  -->
+				<form ng-submit="getInput()">
+					<div>
+						<div ng-show="connStat" style="margin-top:10px;background-color:linen;width:510px;height:30px;">
+							<input ng-show="connStat" ng-model="inputStr" type="text" style="background-color:linen;width:430px;width:100%;height:100%;border:1px solid #666666 "></input>
+						</div>
+					</div>
+				</form>
+			</div>
+<br><br>
+
+<div>
+	Total: <label type="text" ng-model="vm.count_t"><br>
+	Public: <input type="text" ng-model="vm.count_p">
+	Google: <input type="text" ng-model="vm.count_g"><br>
+	Facebook:<input type="text" ng-model="vm.count_f">
+	Apple: <input type="text" ng-model="vm.count_a"><br>
+	<input type="button" ng-click="test()" value="click">
+
+</div>
+			<highchart config="chartConfig" > </highchart>
+</div>
+
+<!--
+</div>
+
+			<div id="container" style="width:100%;height:400px;"></div>
+</div>
+-->
+								<script >
+/*
+
+								var chart1;
+								$(function(){
+									chart1 = new HightCharts.StockChart({
+										chart:{
+											renderTo: 'container'
+										},
+										rangeSelector:{
+											selectd:1
+										},
+										series:[{
+											name: 'USD to EUR',
+											data: usdtoeur
+										}]
+									});
+								});
+								$(function () {
+	$('#container').highcharts({
+			chart: {
+					type: 'bar'
+			},
+			title: {
+					text: 'Fruit Consumption'
+			},
+			xAxis: {
+					categories: ['Public', 'Google', 'Facebook', 'Apple']
+			},
+			yAxis: {
+					title: {
+							text: 'number of people'
+					}
+			},
+			series: [{
+					name: 'yale918',
+					data: [1, 2, 4, 5]
+			}
+		]
+	});
+});
+
+*/
+
+									var app = angular.module('myApp', ["highcharts-ng"]);
+									app.controller('myCtrlr', function($scope) {
+
+										var tCounter=0;
+
+										$scope.vm = {};
+										$scope.vm.count_p=10;
+										$scope.vm.count_g=2;
+										$scope.vm.count_f=3;
+										$scope.vm.count_a=1;
+										$scope.vm.count_t=1;
+				/**********************************************************/
+/*
+									$scope.vm = {};
+									$scope.action = {};
+									$scope.action.test = function(){
+										var highchart = $scope.chartConfig.getHighcharts();
+
+										//$scope.chartConfig.getHighcharts();
+
+										highchart.serires[0].setData([{
+											y:$scope.vm.count_p
+										}]);
+									};
+
+									$scope.chartConfig = {
+										chart: {
+												type: 'bar'
+										},
+										title: {
+												text: 'Fruit Consumption'
+										},
+										xAxis: {
+												categories: ['Public', 'Google', 'Facebook', 'Apple']
+										},
+										yAxis: {
+												title: {
+														text: 'number of people'
+												}
+										},
+										series: [{
+												name: 'yale918',
+												data: [1, 2, 4, 5]
+										}
+									]
+									}
+*/
+
+
+						$scope.test = function(){
+							console.log('vm.count_p= '+$scope.vm.count_p);
+							var chart = $scope.chartConfig.getHighcharts();
+							$scope.vm.count_p = 30;
+							//alert(counter);
+							chart.series[0].setData([{
+								y:tCounter
+							}]);
+							chart.xAxis.setData({});
+							//chart.series[0].data = chart.series[0].data.concat(1);
+/*
+series:[{
+	data:[3]
+}]
+							chart.series[0].setData([{
+								color: Highcharts.getOptions().colors[1],
+								y:$scope.vm.count_p
+							}]);
+*/
+						};
+
+						$scope.chartConfig = {
+							options:{
+								chart:{
+									type: 'column'
+								}
+							},
+					    title: {
+					      text: '所在房間人數統計'
+					    },
+					    xAxis: {
+					      categories: ['public']
+								//categories: ['public']
+					    },
+							series:[{
+								data:[{y:0}]
+							}]
+
+								/*
+					        series: [{
+										name:'Public',
+										data:[{y:$scope.vm.count_p,}]
+									},{
+										name:'Google',
+										data:[{y:$scope.vm.count_g}]
+									},{
+										name:'Facebook',
+										data:[{y:$scope.vm.count_f}]
+									},{
+										name:'Apple',
+										data:[{y:$scope.vm.count_a}]
+									},{
+										name:'Total',
+										data:[{y:$scope.vm.count_t}]
+									}]
+									*/
+						}
+				/**********************************************************/
+										var currentTopic = "hello";
+										var dyn = [];
+										dyn.channel;
+										dyn.room = "_public_";
+										dyn.topic = 'chat/user/' + dyn.room + '/presence/+';
+
+										var host, port, client;
+										var m_message;
+										var privateTopic;
+										var __message;
+										var tag1, tag2, tag3, tag4;
+
+
+										$scope.topicList = [];
+										$scope.online_users = [];
+										$scope.connStat = false;
+
+										$scope.connect = function() {
+											host = $scope.t_host;
+											port = $scope.t_port;
+
+											client = new Paho.MQTT.Client(host, Number(port), Math.uuid(8, 16));
+
+											client.onConnectionLost = f_connLost;
+
+											client.onMessageArrived = f_connMessage;
+
+											var lastwill_topic = "chat/user/_public_/presence/" + $scope.t_name;
+											var lastwill_msg = new Paho.MQTT.Message("offline");
+											lastwill_msg.destinationName = lastwill_topic;
+											lastwill_msg.retained = true;
+											client.connect({
+												onSuccess: f_connConnect,
+												willMessage: lastwill_msg
+											});
+											/*
+																						var lastwill_msg = [];
+																						var lastwill_topic = [];
+																						lastwill_topic[0] = "chat/user/_public_/presence/"+$scope.t_name;
+																						lastwill_topic[1] = "chat/user/_google_/presence/"+$scope.t_name;
+																						lastwill_topic[2] = "chat/user/_facebook_/presence/"+$scope.t_name;
+																						lastwill_topic[3] = "chat/user/_apple_/presence/"+$scope.t_name;
+																						for(i=0;i<4;i++){
+																							lastwill_msg[i] = new Paho.MQTT.Message("offline");
+																							lastwill_msg[i].destinationName = lastwill_topic[i];
+																							lastwill_msg[i].retained = true;
+																						}
+																						client.connect({
+																							onSuccess: f_connConnect,
+																							willMessage: lastwill_msg
+																						});
+											*/
+
+										}
+
+										$scope.disConnect = function() {
+
+											f_send('offline', 'chat/user/_public_/presence/' + $scope.t_name);
+
+											$scope.connStat = false;
+											client.disconnect();
+											$scope.topicList = [];
+											$scope.online_users = [];
+											$scope.showMessage = "";
+										}
+
+										$scope.getInput = function() {
+											var j_message = {
+												"name": $scope.t_name,
+												"message": this.inputStr
+											};
+											var sendMessage = $scope.t_name + ": " + this.inputStr;
+											f_send(sendMessage, dyn.channel);
+											this.inputStr = "";
+										}
+
+										$scope.privateChannel = function(user_to_chat) {
+											dyn.channel = 'chat/user/' + user_to_chat + '/presence/' + $scope.t_name;
+											$scope.channelName = user_to_chat;
+										}
+
+										$scope.b_ch1 = function(_roomName) {
+											//broadCast to leave
+											f_send('leave', 'chat/user/' + dyn.room + '/presence/' + $scope.t_name);
+											//subscribe change
+											dyn.room = _roomName;
+											client.unsubscribe(dyn.topic);
+											var index = $scope.topicList.indexOf(dyn.topic);
+											$scope.topicList.splice(index, 1);
+											dyn.topic = 'chat/user/' + dyn.room + '/presence/+';
+											client.subscribe(dyn.topic);
+											$scope.topicList.push(dyn.topic);
+											//publish change
+											dyn.channel = 'chat/user/' + dyn.room + '/presence/' + $scope.t_name;
+											//set UI
+											$scope.showMessage = "";
+											$scope.channelName = dyn.room;
+											//set self.roomMember
+											$scope.online_users = ['_public_'];
+
+											//broadCast to join
+											f_send('join', 'chat/user/' + dyn.room + '/presence/' + $scope.t_name);
+
+										}
+
+										function f_connLost(resObj) {
+											console.log(resObj.errorMessage);
+										}
+
+										function f_connConnect() {
+
+											console.log("connect successful");
+
+											dyn.channel = 'chat/user/_public_/presence/' + $scope.t_name;
+											$scope.online_users = [];
+											$scope.online_users.push('_public_');
+											$scope.$apply();
+
+											//訂閱私頻
+											privateTopic = 'chat/user/' + $scope.t_name + '/presence/+';
+											client.subscribe(privateTopic);
+											$scope.topicList.push(privateTopic);
+
+											//訂閱全頻點擊
+											client.subscribe(dyn.topic);
+											$scope.topicList.push(dyn.topic);
+
+											f_send('online', dyn.channel);
+
+											$scope.channelName = dyn.room;
+											$scope.connStat = true;
+											$scope.$apply();
+										}
+
+										function f_connMessage(_message) {
+											//console.log(_message.destinationName + ': ' + _message.payloadString);
+											var regex = 'chat/user/' + dyn.room + '/presence/(.+)';
+											var found = _message.destinationName.match(regex);
+
+											if (_message.payloadString == 'online') {
+												tCounter ++;
+												addToList();
+											} else if (_message.payloadString == 'offline') {
+												tCounter --;
+												deleteFromList();
+											} else if (_message.payloadString == 'leave') {
+
+												deleteFromList();
+											} else if (_message.payloadString == 'join') {
+												addToList();
+											} else
+												$scope.showMessage += _message.payloadString + "\n";
+
+											function addToList() {
+												if (found) {
+													var user_id = found[1];
+													var index = $scope.online_users.indexOf(user_id);
+													if (index == -1) {
+														$scope.online_users.push(user_id);
+													}
+												}
+											}
+
+											function deleteFromList() {
+												//console.log("countttttt ");
+												if (found) {
+													var user_id = found[1];
+													var index = $scope.online_users.indexOf(user_id);
+													if (index != -1) {
+														$scope.online_users.splice(index, 1);
+													}
+
+												}
+											}
+
+											$scope.$apply();
+										}
+
+										function f_send(_message, _topic) {
+											//console.log("in f_send, message= "+_message);
+											m_message = new Paho.MQTT.Message(_message);
+											m_message.destinationName = _topic;
+											if (_message == 'online') m_message.retained = true;
+											if (_message == 'offline') m_message.retained = true;
+											if (_message == 'join') m_message.retained = true;
+											if (_message == 'leave') m_message.retained = true;
+
+											try {
+												client.send(m_message);
+											} catch (err) {
+												alert(err.stack);
+											}
+										}
+									});
+								</script>
+</body>
+
+</html>

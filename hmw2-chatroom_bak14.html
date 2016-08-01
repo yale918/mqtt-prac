@@ -102,28 +102,22 @@
 			</div>
 <br><br>
 
-
-
 <div>
-	<span ng-repeat ="userss in all_online_users track by $index"> <a href="" style="text-decoration:none" ng-click="privateChannel(userss)"> {{userss}} </a>
-
-	</span>
+<!--
+<div>
+	<span ng-repeat="online_user in vm.online_users" class="text-danger"><a href="" ng-click="action.build_private_chat_topic(online_user)"><i class="fa fa-child"></i> {{online_user}}</a> </span>
 </div>
-
-
-
-<div>
+-->
+	<!-- <input type="button" ng-click="test()" value="click"> -->
+</div>
 			<highchart config="chartConfig" > </highchart>
-</div>
-
-
 </div>
 
 								<script >
 
 									var app = angular.module('myApp', ["highcharts-ng"]);
 									app.controller('myCtrlr', function($scope) {
-									$scope.all_online_users = [];
+									//$scope.all_online_user = [];
 									$scope.online_users = [];
 									$scope.topicList = [];
 									$scope.connStat = false;
@@ -160,7 +154,6 @@
 
 
 				/**********************************************************/
-
 										$scope.test = function(){
 											chart = $scope.chartConfig.getHighcharts();
 											chart.series[0].setData(
@@ -184,7 +177,6 @@
 												data:[{y:0},{y:0},{y:0},{y:0},{y:0}]
 											}]
 										}
-
 				/**********************************************************/
 
 										$scope.connect = function() {
@@ -228,7 +220,7 @@
 											ct.google = 0;
 											ct.facebook = 0;
 											ct.apple = 0;
-				$scope.test();
+											$scope.test();
 										}
 
 										$scope.getInput = function() {
@@ -320,10 +312,10 @@
 											var stb={};
 											stb.room = subStArray[2];
 											stb.name = subStArray[4];
-
+											//sta.action = subStArray[4];
 
 											if (_message.payloadString == 'online') {
-				$scope.all_online_users.push(stb.name);
+
 												console.log('*******\n'+stb.name+'的online message');
 												console.log('_message.retained: '+_message.retained);
 												console.log('before add cusers: '+$scope.online_users);
@@ -418,7 +410,7 @@
 											}
 
 											$scope.$apply();
-			$scope.test();
+											$scope.test();
 										}
 
 										function f_send(_message, _topic) {

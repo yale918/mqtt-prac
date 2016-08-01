@@ -102,69 +102,36 @@
 			</div>
 <br><br>
 
-
-
 <div>
-	<span ng-repeat ="userss in all_online_users track by $index"> <a href="" style="text-decoration:none" ng-click="privateChannel(userss)"> {{userss}} </a>
 
-	</span>
+	<input type="button" ng-click="test()" value="click">
 </div>
-
-
-
-<div>
 			<highchart config="chartConfig" > </highchart>
-</div>
-
-
 </div>
 
 								<script >
 
 									var app = angular.module('myApp', ["highcharts-ng"]);
 									app.controller('myCtrlr', function($scope) {
-									$scope.all_online_users = [];
-									$scope.online_users = [];
-									$scope.topicList = [];
-									$scope.connStat = false;
 
-									var bucket = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz'];
-									var randNum = Math.floor(Math.random()*10)%26;
-									$scope.t_host='localhost';
-									$scope.t_port='9001';
-									$scope.showMessage='';
-									$scope.t_name=bucket[randNum];
+										var bucket = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz'];
+										var randNum = Math.floor(Math.random()*10)%26;
+										var monitor ="monitor";
+										var chart;
+										$scope.t_host='localhost';
+										$scope.t_port='9001';
+										$scope.showMessage='';
+										$scope.t_name=bucket[randNum];
 
-									var monitor ="monitor";
-									var chart;
-									var currentTopic = "hello";
+										function initializeVar(){
 
-									var host, port, client;
-									var m_message;
-									var privateTopic;
-									var __message;
-									var tag1, tag2, tag3, tag4;
-
-									var dyn = [];
-									dyn.channel;
-									dyn.room = "_public_";
-									dyn.topic = 'chat/user/' + dyn.room + '/presence/+';
-
-									var ct={};
-									ct.total = 0;
-									ct.public = 0;
-									ct.google = 0;
-									ct.facebook = 0;
-									ct.apple = 0;
-
-
+										}
 
 				/**********************************************************/
-
 										$scope.test = function(){
 											chart = $scope.chartConfig.getHighcharts();
 											chart.series[0].setData(
-												[{y:ct.public},{y:ct.google},{y:ct.facebook},{y:ct.apple},{y:ct.total}],true
+												[{y:ct.total},{y:ct.public},{y:ct.google},{y:ct.facebook},{y:ct.apple}],true
 											);
 										};
 
@@ -178,14 +145,35 @@
 									      text: '所在房間人數統計'
 									    },
 									    xAxis: {
-												categories: ['Public','Google','Facebook','Apple','Total']
+												categories: ['Total','Public','Google','Facebook','Apple']
 									    },
 											series:[{
 												data:[{y:0},{y:0},{y:0},{y:0},{y:0}]
 											}]
 										}
-
 				/**********************************************************/
+										var currentTopic = "hello";
+										var dyn = [];
+										dyn.channel;
+										dyn.room = "_public_";
+										dyn.topic = 'chat/user/' + dyn.room + '/presence/+';
+
+										var host, port, client;
+										var m_message;
+										var privateTopic;
+										var __message;
+										var tag1, tag2, tag3, tag4;
+
+										var ct={};
+										ct.total = 0;
+										ct.public = 0;
+										ct.google = 0;
+										ct.facebook = 0;
+										ct.apple = 0;
+
+										$scope.topicList = [];
+										$scope.online_users = [];
+										$scope.connStat = false;
 
 										$scope.connect = function() {
 											host = $scope.t_host;
@@ -196,24 +184,24 @@
 											client.onConnectionLost = f_connLost;
 
 											client.onMessageArrived = f_connMessage;
-
-											//f_send('monitor', 'chat/monitor/'+dyn.room+'/'+$scope.t_name+'/offline');
-
+											//alert('critical:'+dyn.room);
 											var lastwill_topic = "chat/monitor/"+dyn.room+'/'+$scope.t_name+'/offline';
 											var lastwill_msg = new Paho.MQTT.Message("monitor");
 											lastwill_msg.destinationName = lastwill_topic;
 											lastwill_msg.retained = true;
 
+
 											client.connect({
 												onSuccess: f_connConnect,
 												willMessage: lastwill_msg
 											});
+
 										}
 
 										$scope.disConnect = function() {
 											f_send('offline', 'chat/user/'+dyn.room+'/presence/' + $scope.t_name);
 											f_send('monitor', 'chat/monitor/'+dyn.room+'/'+$scope.t_name+'/offline');
-											//chart.redraw();
+											chart.redraw();
 
 											$scope.connStat = false;
 											client.disconnect();
@@ -228,7 +216,7 @@
 											ct.google = 0;
 											ct.facebook = 0;
 											ct.apple = 0;
-				$scope.test();
+											$scope.test();
 										}
 
 										$scope.getInput = function() {
@@ -277,15 +265,14 @@
 										}
 
 										function f_connConnect() {
-											console.log("@ @ @ @  connect successful @ @ @ @");
+											console.log("connect successful");
 											dyn.room = '_public_';
 											dyn.channel = 'chat/user/'+dyn.room+'/presence/' + $scope.t_name;
 											dyn.topic = 'chat/user/'+dyn.room+'/presence/+';
-											console.log('before push: '+$scope.online_users);
+											$scope.online_users = [];
 											$scope.online_users.push('_public_');
-											console.log('after push 1: '+$scope.online_users);
 											$scope.$apply();
-											console.log('after push 2: '+$scope.online_users);
+
 											//訂閱私頻
 											privateTopic = 'chat/user/' + $scope.t_name + '/presence/+';
 											client.subscribe(privateTopic);
@@ -299,61 +286,34 @@
 											client.subscribe('chat/monitor/#');
 											$scope.topicList.push('chat/monitor/#');
 											//alert(dyn.channel);
-											console.log('before f_send : '+$scope.online_users);
 											f_send('online', dyn.channel);
-											console.log('after f_send : '+$scope.online_users);
 											f_send('monitor','chat/monitor/'+dyn.room+'/'+$scope.t_name+'/online');
-											console.log('after f_send2 : '+$scope.online_users);
+
 											$scope.channelName = dyn.room;
 											$scope.connStat = true;
 											$scope.$apply();
-											console.log('after f_send2 : '+$scope.online_users);
 										}
 
 										function f_connMessage(_message) {
-											console.log('the head of message binding');
-											console.log('cusers:' +$scope.online_users);											//console.log(_message.destinationName + ': ' + _message.payloadString);
+											//console.log(_message.destinationName + ': ' + _message.payloadString);
 											var regex = 'chat/user/' + dyn.room + '/presence/(.+)';
 											var found = _message.destinationName.match(regex);
 
-											var subStArray = _message.destinationName.split('/');
-											var stb={};
-											stb.room = subStArray[2];
-											stb.name = subStArray[4];
-
-
 											if (_message.payloadString == 'online') {
-				$scope.all_online_users.push(stb.name);
-												console.log('*******\n'+stb.name+'的online message');
-												console.log('_message.retained: '+_message.retained);
-												console.log('before add cusers: '+$scope.online_users);
 												addToList();
-												console.log('after add cusers: '+$scope.online_users+'\n*******');
-
 											} else if (_message.payloadString == 'offline') {
-
-												console.log('#####\n'+stb.name+'的offline message');
-												console.log('_message.retained: '+_message.retained);
-												console.log('before del cusers: '+$scope.online_users);
 												deleteFromList();
-												console.log('after del cusers: '+$scope.online_users+'\n#####');
-
 											} else if (_message.payloadString == 'leave') {
-
 												deleteFromList();
 											} else if (_message.payloadString == 'join') {
 												addToList();
 											} else if (_message.payloadString == 'monitor'){
-
+												//console.log(_message.payloadString+' : '+_message.destinationName);
 												var subStArray = _message.destinationName.split('/');
 												var sta={};
 												sta.room = subStArray[2];
 												sta.name = subStArray[3];
 												sta.action = subStArray[4];
-
-												console.log('oOoOoOo \n'+sta.name+'的monitor message');
-												console.log('_message.retained: '+_message.retained);
-												console.log('message action: '+sta.action+'\noOoOoOo');
 
 												if(sta.action == 'online'){
 													ct.total++;
@@ -363,16 +323,21 @@
 													else if(sta.room == '_apple_')		ct.apple++;
 												}
 												else if(sta.action == 'offline'){
+													ct.total--;
+
+													if(sta.room == dyn.room){
 														var index = $scope.online_users.indexOf(sta.name);
-														//alert('yooooo');
-														if(index == -1){
-															//alert('yeeeeeeee');
-															ct.total--;
-															if(sta.room == '_public_')				ct.public--;
-															else if(sta.room == '_google_')		ct.google--;
-															else if(sta.room == '_facebook_')	ct.facebook--;
-															else if(sta.room == '_apple_')		ct.apple--;
+														if (index != -1) {
+															$scope.online_users.splice(index, 1);
 														}
+													}
+													else{
+														f_send('offline', 'chat/user/'+sta.room+'/presence/' + sta.name);
+													}
+													if(sta.room == '_public_')				ct.public--;
+													else if(sta.room == '_google_')		ct.google--;
+													else if(sta.room == '_facebook_')	ct.facebook--;
+													else if(sta.room == '_apple_')		ct.apple--;
 												}
 												else if(sta.action == 'leave'){
 													if(sta.room == '_public_')				ct.public--;
@@ -398,27 +363,24 @@
 													var index = $scope.online_users.indexOf(user_id);
 													if (index == -1) {
 														$scope.online_users.push(user_id);
-														console.log('>>> ' + user_id+' added <<<');
 													}
 												}
 											}
 
 											function deleteFromList() {
-												console.log("----deleteFromList called");
+												//console.log("countttttt ");
 												if (found) {
 													var user_id = found[1];
 													var index = $scope.online_users.indexOf(user_id);
 													if (index != -1) {
-														console.log('>>> '+$scope.online_users[index]+" deleted <<<");
 														$scope.online_users.splice(index, 1);
-
 													}
 
 												}
 											}
 
 											$scope.$apply();
-			$scope.test();
+											$scope.test();
 										}
 
 										function f_send(_message, _topic) {
