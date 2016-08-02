@@ -50,7 +50,7 @@ A{text-decoration: none}
 			<input type="button" id="hint" onclick="hint()" value='Hint'>
 			<br>
 		</div>
-		<div>
+		<div style="height:65px;">
 			<ul>
 				<li ng-repeat="topic in topicList">{{topic}}</li>
 			</ul>
@@ -60,18 +60,18 @@ A{text-decoration: none}
 		<div style="width:510px;height:50px;">
 
 			<div style="background-color:linen;float:left;width:400px;height:50px;border:2px solid #666666">
-				<div class="roomBtn" id="Chnnel1" ng-click="b_ch1('_public_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div ng-show="connStat" class="roomBtn" id="Chnnel1" ng-click="b_ch1('_public_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Public
 					<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
 				</div>
-				<div class="roomBtn" id="Chnnel2" ng-click="b_ch1('_google_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div ng-show="connStat" class="roomBtn" id="Chnnel2" ng-click="b_ch1('_google_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Google
 					<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
 				</div>
-				<div class="roomBtn" id="Channel3" ng-click="b_ch1('_facebook_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div ng-show="connStat" class="roomBtn" id="Channel3" ng-click="b_ch1('_facebook_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Facebook
 				</div>
-				<div class="roomBtn" id="Channel4" ng-click="b_ch1('_apple_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div ng-show="connStat" class="roomBtn" id="Channel4" ng-click="b_ch1('_apple_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Apple
 				</div>
 			</div>
@@ -119,7 +119,7 @@ A{text-decoration: none}
 
 
 <div>
-			<highchart config="chartConfig" > </highchart>
+			<highchart ng-show="connStat" config="chartConfig" > </highchart>
 </div>
 
 
@@ -163,10 +163,12 @@ A{text-decoration: none}
 									//var randNum = Math.floor(Math.random()*10)%26;
 									var bucket = ['Jobs','Benzos','Zuckerburg','魯夫','喬巴'];
 									var randNum = Math.floor(Math.random()*10)%5;
+									$scope.t_name=bucket[randNum];
+
 									$scope.t_host='yale918.tk';
 									$scope.t_port='9001';
 									$scope.showMessage='';
-									$scope.t_name=bucket[randNum];
+									$scope.t_name='';
 
 									var monitor ="monitor";
 									var chart;
