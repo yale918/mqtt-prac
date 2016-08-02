@@ -13,6 +13,12 @@
 			margin-top: 0px;
 			margin-left: -250px;
 		}
+		.roomBtn{
+			cursor: pointer;
+		}
+		A:link {color: black}
+A:hover {color: red}
+A{text-decoration: none}
 	</style>
 	<script type="text/javascript" src="lib/jquery-3.0.0.min.js"></script>
 	<script src="lib/angular.min.js"></script>
@@ -27,65 +33,65 @@
 <body ng-controller='myCtrlr'>
 	<!--	<div ng-init="t_host='localhost';t_port='9001';showMessage='';t_name='yale918';"> -->
 	<!-- ########################################################## -->
-	<div style="text-align:center">
-		Host . . . . . . . . Port . . . . . . . . Name
-		<br>
-		<input type="text" ng-model="t_host" ng-disabled="connStat"></input>
-		<input type="text" ng-model="t_port" ng-disabled="connStat"></input>
-		<input type="text" ng-model="t_name" ng-disabled="connStat"> </input>
-		<input type="button" value="connect" ng-click="connect()" ng-show="!connStat"></input>
-		<input type="button" value="disconnect" ng-click="disConnect()" ng-show="connStat"></input>
 
-		<br>
-	</div>
-	<div style="height:50px;">
-		<ul>
-			<li ng-repeat="topic in topicList">{{topic}}</li>
-		</ul>
-	</div>
 
 	<!-- ########################################################## -->
 
 
 	<div id="mainFrame">
+		<div style="text-align:center">
+			Host . . . . . . . . Port . . . . . . . . Name
+			<br>
+			<input type="text" ng-model="t_host" ng-disabled="connStat"></input>
+			<input type="text" ng-model="t_port" ng-disabled="connStat"></input>
+			<input type="text" ng-model="t_name" ng-disabled="connStat"> </input>
+			<input type="button" value="connect" ng-click="connect()" ng-show="!connStat"></input>
+			<input type="button" value="disconnect" ng-click="disConnect()" ng-show="connStat"></input>
 
+			<br>
+		</div>
+		<div style="height:50px;">
+			<ul>
+				<li ng-repeat="topic in topicList">{{topic}}</li>
+			</ul>
+		</div>
 
 
 		<div style="width:510px;height:50px;">
 
-			<div style="background-color:linen;float:left;width:400px;height:50px;border:1px solid #666666">
-				<div id="Chnnel1" ng-click="b_ch1('_public_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+			<div style="background-color:linen;float:left;width:400px;height:50px;border:2px solid #666666">
+				<div class="roomBtn" id="Chnnel1" ng-click="b_ch1('_public_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Public
 					<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
 				</div>
-				<div id="Chnnel2" ng-click="b_ch1('_google_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div class="roomBtn" id="Chnnel2" ng-click="b_ch1('_google_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Google
 					<!--<input id="changeRoom" type="submit" value="Room1"></input>-->
 				</div>
-				<div id="Channel3" ng-click="b_ch1('_facebook_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div class="roomBtn" id="Channel3" ng-click="b_ch1('_facebook_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Facebook
 				</div>
-				<div id="Channel4" ng-click="b_ch1('_apple_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
+				<div class="roomBtn" id="Channel4" ng-click="b_ch1('_apple_')" style="border:1px solid #666666;line-height:40px;text-align:center;style=cursor:pointer;border-radius:10px;background-color:darkorange;margin-top:5px;margin-left:5px;margin-right:5px;float:left;width:88px;height:40px;">
 					Apple
 				</div>
 			</div>
 
 			<div style="background-color:linen;marginleft:10px;float:right;width:100px;height:50px;">
-				<textarea ng-model="channelName" id="room" readonly="readonly" style="line-height:50px;text-align:center;border:1px solid #666666;resize: none;font-size:10px;background-color:linen;width:100%;height:100%">
+				<textarea  ng-model="channelName" id="room" readonly="readonly" style="line-height:50px;text-align:center;border:1px solid #666666;resize: none;font-size:17px;background-color:linen;width:100%;height:100%">
 				</textarea>
 			</div>
 		</div>
 
 		<!-- showMessage  -->
-		<div style="margin-top:10px;width:510px;height:200px;">
-			<div style="background-color:linen;float:left;width:398px;height:200px;">
-				<textarea ng-model="showMessage" id="chatArea" readonly="readonly" style="resize: none;background-color:linen;width:100%;height:100%;border:1px solid #666666"></textarea>
+		<div style="margin-top:10px;width:515px;height:200px;">
+			<div style="background-color:linen;float:left;width:399px;height:200px;">
+				<textarea ng-model="showMessage" id="chatArea" readonly="readonly" style="font-size:17px;resize: none;background-color:linen;width:100%;height:100%;border:1px solid #666666"></textarea>
 			</div>
-			<div style="background-color:linen;margin-left:10px;float:right;width:98px;height:200px;border:1px solid #666666">
+			<div style="background-color:linen;margin-left:2px;float:right;width:100px;height:200px;border:2px solid #666666">
 
 				<table>
 					<tr ng-repeat="users in online_users track by $index">
-						<td><a style="text-decoration:none" href="" ng-click="privateChannel(users)">{{users}}</td>
+						<td><a  style="font-size:17px;text-decoration:none" href="" ng-click="privateChannel(users)">{{users}}</td>
 						</tr>
 					</table>
 				</div>
@@ -95,7 +101,7 @@
 				<form ng-submit="getInput()">
 					<div>
 						<div ng-show="connStat" style="margin-top:10px;background-color:linen;width:510px;height:30px;">
-							<input ng-show="connStat" ng-model="inputStr" type="text" style="background-color:linen;width:430px;width:100%;height:100%;border:1px solid #666666 "></input>
+							<input ng-show="connStat" ng-model="inputStr" type="text" placeholder=" 開始聊天吧.." style="background-color:linen;width:430px;width:100%;height:100%;border:2px solid #666666 "></input>
 						</div>
 					</div>
 				</form>
@@ -105,7 +111,7 @@
 
 
 <div>
-	<span ng-repeat ="userss in all_online_users track by $index"> <a href="" style="text-decoration:none" ng-click="privateChannel(userss)"> {{userss}} </a>
+	在玩用戶：<span ng-repeat ="userss in all_online_users track by $index"> <a href="" style="font-size:20px;text-decoration:none" ng-click="privateChannel(userss)"> {{userss}} </a>
 
 	</span>
 </div>
@@ -158,6 +164,13 @@
 									ct.apple = 0;
 
 
+				/**********************************************************/
+
+
+
+
+
+
 
 				/**********************************************************/
 
@@ -185,6 +198,7 @@
 											}]
 										}
 
+						var chType ='room';
 				/**********************************************************/
 
 										$scope.connect = function() {
@@ -229,21 +243,56 @@
 											ct.facebook = 0;
 											ct.apple = 0;
 				$scope.test();
+				$scope.all_online_users = [];
 										}
 
-										$scope.getInput = function() {
-											var j_message = {
-												"name": $scope.t_name,
-												"message": this.inputStr
-											};
-											var sendMessage = $scope.t_name + ": " + this.inputStr;
-											f_send(sendMessage, dyn.channel);
+				$scope.getInput = function() {
+
+											var sendMessage = $scope.t_name + "： " + this.inputStr;
+
+
+						if(chType=='room'){
+							f_send('[公開] '+sendMessage, dyn.channel, chType);
+						}
+						else if(chType=='private'){
+
+							if($scope.t_name != $scope.channelName){
+								f_send('[私聊'+$scope.channelName+'] '+sendMessage,dyn.channel, chType);
+								$scope.showMessage += '[私聊'+$scope.channelName+' ]'+sendMessage + "\n";
+							}
+							else {
+								f_send('[自言自語] '+sendMessage,dyn.channel, chType);
+							}
+						}
+						else if(chType=='broadcast'){
+							dyn.channel = 'chat/monitor/'+ dyn.room +'/'+ $scope.t_name +'/'+ chType;
+							//alert(dyn.channel);
+							f_send('((((廣播頻道))))] '+sendMessage, dyn.channel, chType);
+						}
+
+
 											this.inputStr = "";
 										}
 
-										$scope.privateChannel = function(user_to_chat) {
+					$scope.privateChannel = function(user_to_chat) {
 											dyn.channel = 'chat/user/' + user_to_chat + '/presence/' + $scope.t_name;
 											$scope.channelName = user_to_chat;
+					if(user_to_chat =='_public_' || user_to_chat =='_google_' || user_to_chat =='_facebook_' || user_to_chat =='_apple_' ){
+						console.log('chType= '+chType);
+						chType = 'room';
+					}
+					else if(user_to_chat =='_broadcast_'){
+						chType = 'broadcast';
+					}
+
+					else{
+						chType = 'private';
+					}
+
+
+
+
+
 										}
 
 										$scope.b_ch1 = function(_roomName) {
@@ -252,6 +301,10 @@
 											f_send('monitor', 'chat/monitor/'+dyn.room+'/'+dyn.name+'/'+'leave');
 											//subscribe change
 											dyn.room = _roomName;
+											//set UI
+											$scope.showMessage = "";
+											$scope.channelName = dyn.room;
+
 											client.unsubscribe(dyn.topic);
 											var index = $scope.topicList.indexOf(dyn.topic);
 											$scope.topicList.splice(index, 1);
@@ -260,11 +313,9 @@
 											$scope.topicList.push(dyn.topic);
 											//publish change
 											dyn.channel = 'chat/user/' + dyn.room + '/presence/' + $scope.t_name;
-											//set UI
-											$scope.showMessage = "";
-											$scope.channelName = dyn.room;
-											//set self.roomMember
-											$scope.online_users = ['_public_'];
+
+						//set self.roomMember
+						$scope.online_users = ['_broadcast_',dyn.room];
 
 											//broadCast to join
 											f_send('join', 'chat/user/' + dyn.room + '/presence/' + $scope.t_name);
@@ -282,7 +333,7 @@
 											dyn.channel = 'chat/user/'+dyn.room+'/presence/' + $scope.t_name;
 											dyn.topic = 'chat/user/'+dyn.room+'/presence/+';
 											console.log('before push: '+$scope.online_users);
-											$scope.online_users.push('_public_');
+						$scope.online_users.push('_broadcast_',dyn.room);
 											console.log('after push 1: '+$scope.online_users);
 											$scope.$apply();
 											console.log('after push 2: '+$scope.online_users);
@@ -323,7 +374,11 @@
 
 
 											if (_message.payloadString == 'online') {
-				$scope.all_online_users.push(stb.name);
+					var index = $scope.all_online_users.indexOf(stb.name);
+					if (index==-1){
+						$scope.all_online_users.push(stb.name);
+					}
+
 												console.log('*******\n'+stb.name+'的online message');
 												console.log('_message.retained: '+_message.retained);
 												console.log('before add cusers: '+$scope.online_users);
@@ -331,6 +386,10 @@
 												console.log('after add cusers: '+$scope.online_users+'\n*******');
 
 											} else if (_message.payloadString == 'offline') {
+				var index = $scope.all_online_users.indexOf(stb.name);
+				if (index!=-1){
+					$scope.all_online_users.splice(index,1);
+				}
 
 												console.log('#####\n'+stb.name+'的offline message');
 												console.log('_message.retained: '+_message.retained);
@@ -389,8 +448,18 @@
 
 
 											}
-											else
-												$scope.showMessage += _message.payloadString + "\n";
+				else{
+/*
+					var subStArray = _message.destinationName.split('/');
+					var sta={};
+					sta.room = subStArray[2];
+					sta.name = subStArray[3];
+					sta.action = subStArray[4];
+*/
+					$scope.showMessage += _message.payloadString + "\n";
+				}
+
+
 
 											function addToList() {
 												if (found) {
