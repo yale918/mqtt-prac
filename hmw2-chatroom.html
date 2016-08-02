@@ -50,7 +50,7 @@ A{text-decoration: none}
 			<input type="button" id="hint" onclick="hint()" value='Hint'>
 			<br>
 		</div>
-		<div style="height:50px;">
+		<div>
 			<ul>
 				<li ng-repeat="topic in topicList">{{topic}}</li>
 			</ul>
@@ -126,17 +126,26 @@ A{text-decoration: none}
 </div>
 
 								<script >
-
+/*
 									function hint(){
 										alert("功能：\n"+
 										" 1) who is online \n"+
 										" 2) highchart \n"+
 										" 3) 房間功能 \n"+
 										" 4) 私聊/廣播 \n\n"+
-										" BUG: \n"+
+										" bug: \n"+
 										" 1) 不同房間斷線lwt會失效 \n"+
 										" 2) 斷線統計可能失效 \n"+
 										" 3) BUG努力修復中 \n"
+									);
+									}
+*/
+									function hint(){
+										alert("\nUsage：\n\n"+
+										" 1) 切換房間 \n\n"+
+										" 2) 點人私聊 \n\n"+
+										" 3) broadcast廣播 \n\n"+
+										" 4) 斷線會有bug orz\n\n"
 									);
 									}
 
@@ -154,7 +163,7 @@ A{text-decoration: none}
 									//var randNum = Math.floor(Math.random()*10)%26;
 									var bucket = ['Jobs','Benzos','Zuckerburg','魯夫','喬巴'];
 									var randNum = Math.floor(Math.random()*10)%5;
-									$scope.t_host='localhost';
+									$scope.t_host='yale918.tk';
 									$scope.t_port='9001';
 									$scope.showMessage='';
 									$scope.t_name=bucket[randNum];
@@ -180,12 +189,6 @@ A{text-decoration: none}
 									ct.google = 0;
 									ct.facebook = 0;
 									ct.apple = 0;
-
-
-				/**********************************************************/
-
-
-
 
 
 
@@ -287,7 +290,7 @@ A{text-decoration: none}
 						else if(chType=='broadcast'){
 							dyn.channel = 'chat/monitor/'+ dyn.room +'/'+ $scope.t_name +'/'+ chType;
 							//alert(dyn.channel);
-							f_send('((((廣播頻道))))] '+sendMessage, dyn.channel, chType);
+							f_send(' ((((廣播頻道)))) '+sendMessage, dyn.channel, chType);
 						}
 
 
