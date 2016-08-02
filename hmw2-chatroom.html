@@ -44,10 +44,10 @@ A{text-decoration: none}
 			<br>
 			<input type="text" ng-model="t_host" ng-disabled="connStat"></input>
 			<input type="text" ng-model="t_port" ng-disabled="connStat"></input>
-			<input type="text" ng-model="t_name" ng-disabled="connStat"> </input>
+			<input type="text" style="border:1px solid #666666" ng-model="t_name" ng-disabled="connStat"> </input>
 			<input type="button" value="connect" ng-click="connect()" ng-show="!connStat"></input>
-			<input type="button" value="disconnect" ng-click="disConnect()" ng-show="connStat"></input>
-
+			<input type="button" value="disconn" ng-click="disConnect()" ng-show="connStat"></input>
+			<input type="button" id="hint" onclick="hint()" value='Hint'>
 			<br>
 		</div>
 		<div style="height:50px;">
@@ -101,7 +101,7 @@ A{text-decoration: none}
 				<form ng-submit="getInput()">
 					<div>
 						<div ng-show="connStat" style="margin-top:10px;background-color:linen;width:510px;height:30px;">
-							<input ng-show="connStat" ng-model="inputStr" type="text" placeholder=" 開始聊天吧.." style="background-color:linen;width:430px;width:100%;height:100%;border:2px solid #666666 "></input>
+							<input ng-show="connStat" ng-model="inputStr" type="text" placeholder=" 聊天輸入.." style="background-color:linen;width:430px;width:100%;height:100%;border:2px solid #666666 "></input>
 						</div>
 					</div>
 				</form>
@@ -111,11 +111,11 @@ A{text-decoration: none}
 
 
 <div>
-	在玩用戶：<span ng-repeat ="userss in all_online_users track by $index"> <a href="" style="font-size:20px;text-decoration:none" ng-click="privateChannel(userss)"> {{userss}} </a>
+	線上用戶：<span ng-repeat ="userss in all_online_users track by $index"> <a href="" style="font-size:20px;text-decoration:none" ng-click="privateChannel(userss)"> {{userss}} </a>
 
 	</span>
 </div>
-
+<br><br>
 
 
 <div>
@@ -127,6 +127,21 @@ A{text-decoration: none}
 
 								<script >
 
+									function hint(){
+										alert("功能：\n"+
+										" 1) who is online \n"+
+										" 2) highchart \n"+
+										" 3) 房間功能 \n"+
+										" 4) 私聊/廣播 \n\n"+
+										" BUG: \n"+
+										" 1) 不同房間斷線lwt會失效 \n"+
+										" 2) 斷線統計可能失效 \n"+
+										" 3) BUG努力修復中 \n"
+									);
+									}
+
+
+
 									var app = angular.module('myApp', ["highcharts-ng"]);
 									app.controller('myCtrlr', function($scope) {
 									$scope.all_online_users = [];
@@ -134,8 +149,10 @@ A{text-decoration: none}
 									$scope.topicList = [];
 									$scope.connStat = false;
 
-									var bucket = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz'];
-									var randNum = Math.floor(Math.random()*10)%26;
+									//var bucket = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz'];
+									//var randNum = Math.floor(Math.random()*10)%26;
+									var bucket = ['Jobs','Benzos','Zuckerburg','魯夫','喬巴'];
+									var randNum = Math.floor(Math.random()*10)%5;
 									$scope.t_host='localhost';
 									$scope.t_port='9001';
 									$scope.showMessage='';
@@ -188,7 +205,7 @@ A{text-decoration: none}
 												}
 											},
 									    title: {
-									      text: '所在房間人數統計'
+									      text: ''
 									    },
 									    xAxis: {
 												categories: ['Public','Google','Facebook','Apple','Total']
