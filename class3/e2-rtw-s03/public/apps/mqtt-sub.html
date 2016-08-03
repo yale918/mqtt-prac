@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>完成版:Mqtt-Sub</title>
+    <link rel="icon" type="image/png" href="assets/imgs/ok.ico">
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />       <!-- 讓網頁漂亮一點的CSS Style -->
+    <link href="assets/css/main.css" rel="stylesheet" />            <!-- 讓表單與角落離開一點 -->
+    <script src="assets/js/jquery-3.0.0.min.js"></script>           <!-- 操控網頁元件的函式庫 -->
+    <script src="assets/js/mqttws31.min.js"></script>               <!-- 連結MQTT Broker的函式庫 -->
+    <script src="assets/js/Math.uuid.js"></script>                  <!-- 一個產生Unique ID的函式庫 -->
+</head>
+<body>
+    <h3>Mqtt - 訊息主題的訂閱</h3>
+    <!-- 一個簡單的網頁表單UI -->
+    <form>
+        Mqtt Host/Port: <br />
+        <input type="text" id="mqtt_host" /> <input type="text" id="mqtt_port" /> <br />
+        Topic: <br />
+        <input type="text" id="topic" style="display: none;" /> 
+        <input type="button" id="subscribe" value="Subscribe" style="display: none;" /> <br /><br />        
+        <input type="button" id="connect" value="Connect" />
+    </form>
+
+    <!-- 程式邏輯 -->
+    <script>
+        $(function () {
+            // 全域變數
+            var mqtt_client;
+            var mqtt_broker_host;
+            var mqtt_broker_port;
+            var topic_subscribed = false;
+
+            // ** 連接MQTT Broker
+            $('#connect').click(function () {
+                // 從UI取得mqtt broker的連接資訊
+                mqtt_broker_host = $('#mqtt_host').val();
+                mqtt_broker_port = $('#mqtt_port').val();
+
+                // 產生mqtt連結client物件的instance
+                mqtt_client = new Paho.MQTT.Client(mqtt_broker_host, Number(mqtt_broker_port), Math.uuid(8, 16));
+
+                // 設定某些事件的回呼處理的functions
+                mqtt_client.onConnectionLost = onConnectionLost;
+                mqtt_client.onMessageArrived = onMessageArrived;
+
+                // 連接mqtt broker
+                mqtt_client.connect({ onSuccess: onConnect });
+
+                // 當成功建立mqtt broker的連結時會被呼叫的function
+                function onConnect() {
+                    console.log("onConnect");
+
+                    // UI元件的控制
+                    $('#connect').hide();
+                    $('#topic').show();
+                    $('#subscribe').show();
+                }
+
+                // 當與mqtt broker的連結被斷開時會被呼叫的function
+                function onConnectionLost(responseObject) {
+                    if (responseObject.errorCode !== 0) {
+                        console.log("onConnectionLost:" + responseObject.errorMessage);
+                    }
+
+                    // UI元件的控制
+                    $('#connect').show();
+                    $('#topic').hide();
+                    $('#subscribe').hide();
+                }
+
+                // 當訂閱的主題有訊息時會被呼叫的callback function
+                function onMessageArrived(message) {
+                    // 把訊息的主要資訊擷取出來
+                    var topic = message.destinationName;
+                    // 建構一個訊息資訊物件
+                    var msgObj = {
+                        'topic': message.destinationName,
+                        'retained': message.retained,
+                        'qos': message.qos,
+                        'payload': message.payloadString
+                    };
+
+                    // 打印到Browser的debug console
+                    console.log("onMessageArrived:" + JSON.stringify(msgObj));
+                    // 使用html的alert視窗來秀出訊息
+                    alert(JSON.stringify(msgObj));
+                }
+            });
+
+            // **訂閱/解閱訊息主題
+            $('#subscribe').click(function () {
+                var topic = $('#topic').val();
+                if (topic_subscribed == true) {
+                    // 要解除訂閱
+                    mqtt_client.unsubscribe(topic);
+                    $('#topic').attr('disabled', false);  // 把"topic"的輸入input解鎖
+                    $('#subscribe').prop('value', 'Subscribe'); // 更換button的label
+                    topic_subscribed = false; // 更新flag
+                } else {
+                    // 要訂閱訊息主題
+                    mqtt_client.subscribe(topic);
+                    $('#topic').attr('disabled', true); // 把"topic"的輸入input解鎖
+                    $('#subscribe').prop('value', 'Unsubscribe'); // 更換button的label
+                    topic_subscribed = true; // 更新flag
+                }                
+            });
+        });
+    </script>
+</body>
+</html>

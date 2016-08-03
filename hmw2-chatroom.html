@@ -17,7 +17,7 @@
 			cursor: pointer;
 		}
 		A:link {color: black}
-A:hover {color: red}
+		A:hover {color: red}
 A{text-decoration: none}
 	</style>
 	<script type="text/javascript" src="lib/jquery-3.0.0.min.js"></script>
@@ -159,16 +159,16 @@ A{text-decoration: none}
 									$scope.topicList = [];
 									$scope.connStat = false;
 
-									//var bucket = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz'];
-									//var randNum = Math.floor(Math.random()*10)%26;
-									var bucket = ['Jobs','Benzos','Zuckerburg','魯夫','喬巴'];
-									var randNum = Math.floor(Math.random()*10)%5;
-									$scope.t_name=bucket[randNum];
+									var bucket = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz'];
+									var randNum = Math.floor(Math.random()*10)%26;
+									//var bucket = ['Jobs','Benzos','Zuckerburg','魯夫','喬巴'];
+									//var randNum = Math.floor(Math.random()*10)%5;
+									//$scope.t_name=bucket[randNum];
 
-									$scope.t_host='yale918.tk';
+									$scope.t_host='localhost';
 									$scope.t_port='9001';
 									$scope.showMessage='';
-									$scope.t_name='';
+									$scope.t_name=bucket[randNum];
 
 									var monitor ="monitor";
 									var chart;
@@ -207,7 +207,7 @@ A{text-decoration: none}
 										$scope.chartConfig = {
 											options:{
 												chart:{
-													type: 'column'
+													type: 'bar'
 												}
 											},
 									    title: {

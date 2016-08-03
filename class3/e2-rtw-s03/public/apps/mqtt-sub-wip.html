@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>練習版:Mqtt-Sub</title>
+    <link rel="icon" type="image/png" href="assets/imgs/wip.ico">
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />       <!-- 讓網頁漂亮一點的CSS Style -->
+    <link href="assets/css/main.css" rel="stylesheet" />            <!-- 讓表單與角落離開一點 -->
+    <script src="assets/js/jquery-3.0.0.min.js"></script>           <!-- 操控網頁元件的函式庫 -->
+    <script src="assets/js/mqttws31.min.js"></script>               <!-- 連結MQTT Broker的函式庫 -->
+    <script src="assets/js/Math.uuid.js"></script>                  <!-- 一個產生Unique ID的函式庫 -->
+</head>
+<body>
+    <h3>Mqtt - 訊息主題的訂閱</h3>
+    <!-- 一個簡單的網頁表單UI -->
+    <form>
+        Mqtt Host/Port: <br />
+        <input type="text" id="mqtt_host" /> <input type="text" id="mqtt_port" /> <br />
+        Topic: <br />
+        <input type="text" id="topic" style="display: none;" /> 
+        <input type="button" id="subscribe" value="Subscribe" style="display: none;" /> <br /><br />        
+        <input type="button" id="connect" value="Connect" />
+    </form>
+
+    <!-- 程式邏輯 -->
+    <script>
+        $(function () {
+            // 全域變數
+            var mqtt_client;
+            var mqtt_broker_host;
+            var mqtt_broker_port;
+            var topic_subscribed = false;
+
+            // ** 連接MQTT Broker
+            $('#connect').click(function () {
+                
+            });
+
+            // **訂閱/解閱訊息主題
+            $('#subscribe').click(function () {
+                
+            });
+        });
+    </script>
+</body>
+</html>
+
+

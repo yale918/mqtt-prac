@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="rtwApp">
+<head>
+    <meta charset="utf-8" />
+    <title>完成版:Highchart-Angular.js</title>
+    <link rel="icon" type="image/png" href="assets/imgs/ok.ico">
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />       <!-- 讓網頁漂亮一點的CSS Style -->
+    <link href="assets/css/main.css" rel="stylesheet" />            <!-- 讓表單與角落離開一點 -->
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="assets/js/angular.min.js"></script>                <!-- 操控網頁元件的函式庫 -->
+    <script src="assets/js/highcharts.js"></script>                 <!-- 產生圖表(Highchart)的函式庫 -->
+    <script src="assets/js/highcharts-more.js"></script>            <!-- Highchart的延伸工具函式庫 -->
+    <script src="assets/js/solid-gauge.js"></script>                <!-- Highchart特定圖表函式庫 -->
+    <script src="assets/js/highcharts-ng.min.js"></script>          <!-- Angular.js對Highchart的函式庫 -->
+</head>
+<body ng-controller="rtwAppCtrl">
+    <h3>Highchart - Angular.js版</h3>
+    <a href="/index-s02.html"><i class="fa fa-car"></i> e2-rtw-s02</a>
+    <!-- 網頁表單UI -->
+    <h4>資料表單(View)</h4>
+    <form>
+        表頭:<br />
+        <input type="text" ng-model="chartConfig.title.text"><br />
+        移動:<br>
+        <input type="number" ng-model="vm.chart_data_move"> <input type="button" id="connect" value="Update" ng-click="action.update_move()"/><br/>
+        運動:<br>
+        <input type="number" ng-model="vm.chart_data_exercise"> <input type="button" id="connect" value="Update" ng-click="action.update_exercise()" /><br />
+        標準:<br>
+        <input type="number" ng-model="vm.chart_data_standard"> <input type="button" id="connect" value="Update" ng-click="action.update_standard()" /><br />
+    </form>
+    <br />
+    <!-- 資料繫結展現區 -->
+    <h4>資料繫結(Model)</h4>
+    <div style="width: 400px; height: 400px; margin: 0 auto">
+        <highchart config="chartConfig"></highchart>
+    </div>
+
+    <!-- 程式邏輯 -->
+    <script>
+        // 定義Angular Module - ** 在這裡要引入"highcharts-ng"的模組 **
+        var rtwApp = angular.module('rtwApp', ["highcharts-ng"]);
+
+        // 定義Angular Controller
+        rtwApp.controller('rtwAppCtrl', function ($scope) {
+            // 初始view model的資料與變數
+            $scope.vm = {};
+            $scope.vm.chart_data_move = 80;
+            $scope.vm.chart_data_exercise = 65;
+            $scope.vm.chart_data_standard = 50;
+
+            // 設定UI會觸發的動作
+            $scope.action = {};
+            // **動作: 更新Highchart資料物件的內容
+            $scope.action.update_move = function () {
+                // 取得原生的highchart的物件instance
+                var highchart = $scope.chartConfig.getHighcharts();
+                // 透過原本的highchart的API來修改圖表的資料
+                highchart.series[0].setData([{
+                    color: Highcharts.getOptions().colors[0],
+                    radius: '100%',
+                    innerRadius: '100%',
+                    y: $scope.vm.chart_data_move
+                }]);
+            };
+            // **動作: 更新Highchart資料物件的內容
+            $scope.action.update_exercise = function () {
+                // 取得原生的highchart的物件instance
+                var highchart = $scope.chartConfig.getHighcharts();
+                // 透過原本的highchart的API來修改圖表的資料
+                highchart.series[1].setData([{
+                    color: Highcharts.getOptions().colors[1],
+                    radius: '75%',
+                    innerRadius: '75%',
+                    y: $scope.vm.chart_data_exercise
+                }]);
+            };
+            // **動作: 更新Highchart資料物件的內容
+            $scope.action.update_standard = function () {
+                // 取得原生的highchart的物件instance
+                var highchart = $scope.chartConfig.getHighcharts();
+                // 透過原本的highchart的API來修改圖表的資料
+                highchart.series[2].setData([{
+                    color: Highcharts.getOptions().colors[2],
+                    radius: '50%',
+                    innerRadius: '50%',
+                    y: $scope.vm.chart_data_standard
+                }]);
+            };
+
+            // 設定要繋結到Highchart的chartConfig物件
+            $scope.chartConfig = {
+                options: {
+                    //This is the Main Highcharts chart config. Any Highchart options are valid here.
+                    //will be overriden by values specified below.
+                    chart: {
+                        type: 'solidgauge',
+                        marginTop: 50
+                    },
+                    pane: {
+                        startAngle: 0,
+                        endAngle: 360,
+                        background: [{ // Track for Move
+                            outerRadius: '112%',
+                            innerRadius: '88%',
+                            backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0.3).get(),
+                            borderWidth: 0
+                        }, { // Track for Exercise
+                            outerRadius: '87%',
+                            innerRadius: '63%',
+                            backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[1]).setOpacity(0.3).get(),
+                            borderWidth: 0
+                        }, { // Track for Stand
+                            outerRadius: '62%',
+                            innerRadius: '38%',
+                            backgroundColor: Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get(),
+                            borderWidth: 0
+                        }]
+                    },
+                    plotOptions: {
+                        solidgauge: {
+                            borderWidth: '34px',
+                            dataLabels: {
+                                enabled: false
+                            },
+                            linecap: 'round',
+                            stickyTracking: false
+                        }
+                    },
+                    tooltip: {
+                        borderWidth: 0,
+                        backgroundColor: 'none',
+                        shadow: false,
+                        style: {
+                            fontSize: '16px'
+                        },
+                        pointFormat: '{series.name}<br><span style="font-size:2em; color: {point.color}; font-weight: bold">{point.y}%</span>',
+                        positioner: function (labelWidth, labelHeight) {
+                            return {
+                                x: 200 - labelWidth / 2,
+                                y: 180
+                            };
+                        }
+                    }
+                },
+                title: {
+                    text: "活動力",
+                    style: {
+                        fontSize: '20px',
+                        fontFamily: 'Microsoft JhengHei'
+                    }
+                },                
+                yAxis: {
+                    min: 0,
+                    max: 100,
+                    lineWidth: 0,
+                    tickPositions: []
+                },
+                credits: {
+                    enabled: true
+                },
+                series: [{
+                    name: 'Move',
+                    borderColor: Highcharts.getOptions().colors[0],
+                    data: [{
+                        color: Highcharts.getOptions().colors[0],
+                        radius: '100%',
+                        innerRadius: '100%',
+                        y: $scope.vm.chart_data_move
+                    }]
+                }, {
+                    name: 'Exercise',
+                    borderColor: Highcharts.getOptions().colors[1],
+                    data: [{
+                        color: Highcharts.getOptions().colors[1],
+                        radius: '75%',
+                        innerRadius: '75%',
+                        y: $scope.vm.chart_data_exercise
+                    }]
+                }, {
+                    name: 'Stand',
+                    borderColor: Highcharts.getOptions().colors[2],
+                    data: [{
+                        color: Highcharts.getOptions().colors[2],
+                        radius: '50%',
+                        innerRadius: '50%',
+                        y: $scope.vm.chart_data_standard
+                    }]
+                }]
+            };            
+        });
+    </script>
+</body>
+</html>

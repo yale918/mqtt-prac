@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <style>
+    .parentNavs{
+    cursor:default;
+  }
+    A:link{color:black}
+    A:visited{color:black}
+    A:hover{color:red}
+  </style>
+</head>
+<body>
+<h1>Yale1024</h1>
+<div >
+  <hr>
+  
+  <div class='parentNavs' name='parentNav' style="float:left;width:50px;height:20px;font-size:25px">Impls
+    <div name='childNav1'> <a href="#" style="text-decoration:none;font-size:20px">HttpServer</a></div>
+    <div name='childNav1'> <a href="#" style="text-decoration:none;font-size:20px">ChatRoom</a></div>
+    <div name='childNav1'> <a href="#" style="text-decoration:none;font-size:20px">GPlatform</a></div>
+  </div>
+  <div class='parentNavs' name='parentNav' style="margin-left:80px;float:left;width:50px;height:20px;font-size:25px">Links
+    <div name='childNav2'> <a href="#" style="text-decoration:none;font-size:20px">GitHub</a></div>
+    <div name='childNav2'> <a href="#" style="text-decoration:none;font-size:20px">Blogger</a></div>
+    <div name='childNav2'> <a href="#" style="text-decoration:none;font-size:20px">CCMath</a></div>
+  </div>
+
+</div>
+  <script>
+    var i,j;
+    var parentNav = document.getElementsByName('parentNav');
+    var childNav1 = document.getElementsByName('childNav1');
+    var childNav2 = document.getElementsByName('childNav2');
+    //var temp=parentNav.length;
+    //for(j=0;j<2;j++){
+    parentNav[0].onmouseover = function(){
+      parentNav[0].style.color='red';
+      for(i=0;i<childNav1.length;i++){
+       childNav1[i].style.display = 'block' ;
+      }
+    }
+    parentNav[0].onmouseout = function(){
+      parentNav[0].style.color='black';
+      for(i=0;i<childNav1.length;i++){
+       childNav1[i].style.display = 'none' ;
+      }
+    }
+      parentNav[1].onmouseover = function(){
+        parentNav[1].style.color='red';
+        for(i=0;i<childNav2.length;i++){
+         childNav2[i].style.display = 'block' ;
+        }
+      }
+      parentNav[1].onmouseout = function(){
+        parentNav[1].style.color='black';
+        for(i=0;i<childNav2.length;i++){
+         childNav2[i].style.display = 'none' ;
+        }
+      }
+    //}
+
+  </script>
+</body>
+</html>

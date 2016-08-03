@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>練習版:AngularJs-2 way binding</title>
+    <link rel="icon" type="image/png" href="assets/imgs/wip.ico">
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />       <!-- 讓網頁漂亮一點的CSS Style -->
+    <link href="assets/css/main.css" rel="stylesheet" />            <!-- 讓表單與角落離開一點 -->
+    <script src="assets/js/angular.min.js"></script>                <!-- 操控網頁元件的函式庫 -->
+</head>
+<body>
+    <h3>Angular.js - 雙向資料繫結</h3>
+    <h4>(Two-way Data Binding)</h4>
+    <!-- 網頁表單UI -->
+    <h4>資料表單(View)</h4>
+    <form>
+        First name:<br>
+        <input type="text" name="firstname"><br />
+
+        Last name:<br />
+        <input type="text" name="lastname"><br />
+
+        Gender:<br />
+        <select>
+            <option value="male"> Male</option>
+            <option value="female"> Female</option>
+            <option value="other"> Other</option>
+        </select>
+        <br /><br />
+        <input type="button" value="Add Participant">
+    </form>
+    <br/>
+
+    <!-- 資料繫結展現區 -->
+    <h4>資料繫結(Model)</h4>
+    <ul>
+        <li>vm.firstname: <font color="blue"></font></li>
+        <li>vm.lastname: <font color="blue"></font></li>
+        <li>vm.gender: <font color="blue"></font></li>
+    </ul>
+
+    <table class="table-bordered">
+        <tr>
+            <th> Firstname </th>
+            <th> Lastname </th>
+            <th> Gender </th>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+    <!-- 程式邏輯 -->
+    <script>        
+
+    </script>
+</body>
+</html>
+
+
+
+

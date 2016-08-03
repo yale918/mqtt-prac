@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="rtwApp">
+<head>
+    <meta charset="utf-8" />
+    <title>完成版:AngularJs-2 way binding</title>
+    <link rel="icon" type="image/png" href="assets/imgs/ok.ico">
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />       <!-- 讓網頁漂亮一點的CSS Style -->
+    <link href="assets/css/main.css" rel="stylesheet" />            <!-- 讓表單與角落離開一點 -->
+    <script src="assets/js/angular.min.js"></script>                <!-- 操控網頁元件的函式庫 -->
+</head>
+<body ng-controller="rtwAppCtrl">
+    <h3>Angular.js - 雙向資料繫結</h3>
+    <h4>(Two-way Data Binding)</h4>
+    <!-- 網頁表單UI -->
+    <h4>資料表單(View)</h4>
+    <form>
+        First name:<br>
+        <input type="text" name="firstname" ng-model="vm.firstname"><br />
+
+        Last name:<br />
+        <input type="text" name="lastname" ng-model="vm.lastname"><br />
+
+        Gender:<br />
+        <select ng-model="vm.gender">
+            <option value="male"> Male</option>
+            <option value="female"> Female</option>
+            <option value="other"> Other</option>
+        </select>
+        <br /><br />
+        <input type="button" value="Add Participant" ng-click="action.add_participant()">
+    </form>
+    <br/>
+
+    <!-- 資料繫結展現區 -->
+    <h4>資料繫結(Model)</h4>
+    <ul>
+        <li>vm.firstname: <font color="blue">{{vm.firstname}}</font></li>
+        <li>vm.lastname: <font color="blue">{{vm.lastname}}</font></li>
+        <li>vm.gender: <font color="blue">{{vm.gender}}</font></li>
+    </ul>
+
+    <table class="table-bordered" ng-show="vm.has_participant">
+        <tr>
+            <th> Firstname </th>
+            <th> Lastname </th>
+            <th> Gender </th>
+        </tr>
+        <tr ng-repeat="participant in vm.participants">
+            <td>{{participant.firstname}}</td>
+            <td>{{participant.lastname}}</td>
+            <td>{{participant.gender}}</td>
+        </tr>
+    </table>
+    <!-- 程式邏輯 -->
+    <script>
+        // Define the module
+        var rtwApp = angular.module('rtwApp', []);
+
+        // Define the controller
+        rtwApp.controller('rtwAppCtrl', function ($scope) {
+            // 初始view model的資料與變數
+            $scope.vm = {};
+            $scope.vm.firstname = "";
+            $scope.vm.lastname = "";
+            $scope.vm.gender = "other";
+            $scope.vm.participants = [];
+            $scope.vm.has_participant = false;
+
+            // 設定UI會觸發的動作
+            $scope.action = {};
+            $scope.action.add_participant = function () {
+                $scope.vm.participants.push({
+                    firstname: $scope.vm.firstname,
+                    lastname: $scope.vm.lastname,
+                    gender: $scope.vm.gender
+                });
+
+                $scope.vm.has_participant = true;
+                // 重置變數
+                reset_variables();
+            };
+
+            // Utility函式
+            reset_variables = function () {
+                $scope.vm.firstname = "";
+                $scope.vm.lastname = "";
+                $scope.vm.gender = "other";
+            };
+        });
+    </script>
+</body>
+</html>

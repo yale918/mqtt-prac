@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="web_app">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mqtt網頁Client</title>
+    <link rel="icon" type="image/x-icon" href="assets/imgs/stack.ico">
+</head>
+<body>
+    <!-- NAVIGATION-->
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#/home" class="navbar-brand"> <img src="assets/imgs/eighty20-icon-50.png" /></a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="dropdown">
+                        <a href="http://eighty20.cc/apps/e2-rtw-v01/index.html" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-bullhorn"></i> 活動網頁 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="http://eighty20.cc/apps/e2-rtw-v01/index.html">即時網頁手把手(e2-rtw-v01)</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-desktop"></i> 範例 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li class="dropdown-header">Utilities</li>
+                            <li><a ui-sref="mqtt_web_client">Mqtt Web Client</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">Web Application</li>
+                            <li><a ui-sref="mqtt_web_whoisonline">Who is online</a></li>
+                            <li><a ui-sref="mqtt_web_inboxnotification">Inbox and notification</a></li>
+                            <li class="divider"></li>
+                            <li class="dropdown-header">IoT</li>
+                            <li><a ui-sref="iot_smartphone_viewer">Mobile device sensor data viewer</a></li>
+                            <li><a ui-sref="iot_smartphone_collector">Mobile device sensor data collector</a></li>
+                        </ul>
+                    </li>
+
+                    <li><a href="https://docs.google.com/presentation/d/1ju7OGzLp8jS7_UgvoZqWNKfqengCHHMm4qympYlSa6I/edit?usp=sharing"><i class="fa fa-slideshare"></i> 範例說明</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- MAIN CONTENT-->
+    <div class="container">
+        <a href="/index-s01.html"><i class="fa fa-bicycle"></i> e2-rtw-s01</a> <a href="/index-s02.html"><i class="fa fa-car"></i> e2-rtw-s02</a> 
+        <a href="/index-s03.html"><i class="fa fa-rocket"></i> e2-rtw-s03</a>
+        <!-- This is the key content-->
+        <div ui-view></div>
+    </div>
+
+
+    <!--FOOTER-->
+    <footer class="footer">
+        <div class="row">
+            <div class="text-center"><p><a href="https://github.com/erhwenkuo/RealtimeWebMqtt"><i class="fa fa-2x fa-github"></i></a> <i class="fa fa-copyright"></i> eighty20.cc</p></div>
+        </div>
+       
+    </footer>
+
+    <!-- Necessary Css & Scripts -->
+    <!-- <link href="assets/css/notosan-font.css" rel="stylesheet" />-->
+    <link href="assets/css/bootstrap.simplex.css" rel="stylesheet" />
+    <link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="assets/css/angular-ui-notification.min.css" rel="stylesheet" />
+    <link href="assets/css/sticky-footer.css" rel="stylesheet" />
+
+    <script src="assets/js/jquery-1.11.3.min.js"></script>
+
+    <script src="assets/js/angular.min.js"></script>
+    <script src="assets/js/angular-animate.min.js"></script>
+    <script src="assets/js/angular-ui-router.min.js"></script>
+    <script src="assets/js/angular-ui-notification.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="assets/js/ui-bootstrap-tpls-0.13.0.min.js"></script>
+    
+    <script src="assets/js/mqttws31.js"></script> <!--handle Mqtt Broker connection-->
+    <script src="assets/js/moment-with-locales.min.js"></script> <!--handle Date/Time object conversion-->
+
+    <script src="assets/js/qrcode.js"></script> <!--Qr code generator-->
+    <script src="assets/js/angular-qr.min.js"></script><!--Qr code (angular directive)-->
+    <script src="assets/js/re-tree.min.js"></script><!--angular module to detect device-->
+    <script src="assets/js/ng-device-detector.min.js"></script> <!--angular module to detect device-->
+    <script src="assets/js/three.min.js"></script><!-- libary to generate 3D object -->
+
+    <script src="app.js"></script>
+    <script src="services/app_config.js"></script>
+
+    <script src="assets/js/iot-device.js"></script> <!--witlab IoT SDK (deviceClient)-->
+    <script src="assets/js/iot-application.js"></script><!--witlab IoT SDK (applicationClient)-->
+
+    <script src="controllers/mqtt_web_client_ctrl.js"></script>
+    <script src="controllers/mqtt_web_whoisonline_ctrl.js"></script>
+    <script src="controllers/mqtt_web_inboxnotification_ctrl.js"></script>
+    <script src="controllers/iot_smartphone_viewer_ctrl.js"></script>
+    <script src="controllers/iot_smartphone_collector_ctrl.js"></script>
+
+</body>
+</html>
